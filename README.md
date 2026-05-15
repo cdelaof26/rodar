@@ -33,6 +33,7 @@ los diagramas anteriores en formato ```svg```.
 <pre>
     POST /providers
     GET  /providers/{providersId}
+    GET  /providers  # Testing
 </pre>
 </details>
 
@@ -94,5 +95,8 @@ por simplificar la implementación, los dos se unifican en uno
 
 
 ## Historial de cambios
+
+### v0.0.2 Microservicio ```pmmicro```
+- Creación del ```docker-compose.yml```
 
 ### v0.0.1 Proyecto inicial

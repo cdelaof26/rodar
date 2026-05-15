@@ -17,3 +17,71 @@ En la arquitectura se observan diferentes elementos,
 * Círculo con un cuadrado que apunta a tres cuadrados 
 más pequeños:
   * Balanceador de carga
+
+
+# JSON
+
+<pre>
+    Provider
+{
+  "providerId": number,
+  "companyName": string,
+  "email": string,
+  "phone": string,
+  "location": string
+}
+</pre>
+
+
+<pre>
+    Users
+{
+  "userId": number,
+  "name": string,
+  "email": string,
+  "phone": string
+}
+</pre>
+
+
+<pre>
+    Vehicle
+{
+  "vehicleId": number,
+  "brand": string,
+  "model": string,
+  "type": string,
+  "pricePerDay": number,
+  "location": string,
+  "available": bool,
+  "providerId": number
+}
+</pre>
+
+
+<pre>
+    Payment
+{
+  "paymentId": number,
+  "reservationId": number,
+  "amount": number,
+  "paymentMethod": string,
+  "status": string
+}
+</pre>
+
+
+<pre>
+    Reservation
+{
+  "reservationId": number,
+  "userId": number,
+  "vehicleId": number,
+  "paymentId": number,
+  "startDate": "yyyy-mm-dd",
+  "endDate": "yyyy-mm-dd",
+}
+</pre>
+
+
+TODO: Use proper JSON schemas

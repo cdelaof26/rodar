@@ -1,0 +1,49 @@
+services:
+  pmmicro-db:
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: "pmdb"
+
+    container_name: pmmicro-db
+    image: mariadb:12.3.1-ubi10-rc
+    ports:
+      - 3306:3306
+    volumes:
+      - pmmicro-db-data:/var/lib/mysql
+      - ./pmmicro/db:/docker-entrypoint-initdb.d
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 20s
+      timeout: 20s
+      retries: 2
+      start_period: 10s
+    networks:
+      - pmmicro-net
+
+  pmmicro:
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://pmmicro-db:3306/pmdb?useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+
+    container_name: pmmicro
+    build:
+      context: pmmicro
+    ports:
+      - 8080:8080
+    depends_on:
+      pmmicro-db:
+        condition: service_healthy
+    restart: always
+    networks:
+      - pmmicro-net
+
+volumes:
+  pmmicro-db-data: {}
+
+networks:
+  pmmicro-net:
+    driver: bridge
