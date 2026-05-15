@@ -1,0 +1,80 @@
+@startuml
+title Modelo de dominio: Sistema 6 - Alquiler de coches (Grupos F y N)
+
+class Usuario {
+  /autenticado
+}
+
+class Reservación {
+  fechaInicial
+  fechaFinal
+  estado
+}
+
+class Pago {}
+
+class Búsqueda {
+  fechaInicial
+  fechaFinal
+}
+
+class Vehículo {
+  modelo
+  marca
+  disponible
+}
+
+class Tipo {}
+
+class Proveedor {}
+
+class Reporte {
+  disponibilidadDeVehículos
+  rentabilidadDeFlota
+  
+}
+
+class Estadístico {
+  totalDeReservas
+  díasOcupado
+  /precioPromedioPorDía
+  /ingresosTotales
+  /tasaDeOcupación
+}
+
+class Divisa {}
+
+class ZonaGeografica {
+  
+}
+
+class Precio {}
+
+Usuario "0..*" -- "1" Divisa : Utiliza-una >
+Usuario "0..*" -- "1" ZonaGeografica : Pertenece-a >
+Usuario "1" -- "0..*" Búsqueda : Realiza >
+Usuario "1" -- "0..*" Vehículo : Renta >
+Usuario "1" -- "0..*" Reservación : Realiza >
+
+Búsqueda "1" -- "0..*" ZonaGeografica : Filtra-por >
+Búsqueda "1" -- "1..*" Precio : Filtra-por >
+Búsqueda "1" -- "1..*" Tipo : Filtra-por >
+
+Vehículo "0..*" -- "0..*" ZonaGeografica
+Vehículo "1" -- "1" Precio
+Vehículo "1..*" -- "1" Tipo
+Vehículo "1" -- "1" Estadístico
+
+Proveedor "0..*" -- "1" Divisa : Utiliza-una >
+Proveedor "1" -- "1..*" Vehículo
+Proveedor "1" -- "0..*" Reporte
+
+Precio "1" -- "1..*" Divisa : Se expresa-en >
+
+Reservación "1" -- "0..1" Pago
+
+Pago "1" -- "1" Precio : Tiene-un >
+
+Reporte "1" -- "0..*" Estadístico
+
+@enduml

@@ -1,0 +1,106 @@
+@startuml
+title Diagrama de secuencia: Procesar pago y actualizar inventario
+
+
+actor Usuario
+participant "__:UI__" as ui
+
+participant "__:API Gateway__" as api
+
+box "Front-end user microservice" #F0F0F0
+  participant "__:App.js__" as vue
+end box
+
+box "Payments microservice" #F0F0F0
+  participant "__:PaymentController__" as pmicro
+  participant "__:PaymentService__" as pserv
+  participant "__:PaymentRepository__" as prepo
+end box
+
+box "Reservation microservice" #F0F0F0
+  participant "__:ReservationController__" as remicro
+  participant "__:ReservationService__" as reserv
+  participant "__:ReservationRepository__" as rerepo
+end box
+
+box "Vehicles inventory microservice" #F0F0F0
+  participant "__:InventoryController__" as vimicro
+  participant "__:InventoryService__" as viserv
+  participant "__:InventoryRepository__" as virepo
+end box
+
+box "Notifications microservice" #F0F0F0
+  participant "__:NotificationController__" as nmicro
+  participant "__:NotificationService__" as nserv
+end box
+
+participant "__:Payment__" as paygate
+
+
+Usuario -> ui : Accede a la página de pagos pendientes
+ui -> vue : GET /services/payments/pending
+note right of ui
+<code>
+<!DOCTYPE html>
+<html lang="es">
+  ...
+</html>
+</code>
+end note
+vue -> ui : HTML+CSS+JS
+ui -> ui : Renderiza página
+
+ui -> api : GET /payments?status=pending
+api -> pmicro : GET /payments?status=pending
+
+pmicro -> pserv : getPayments(...): ResponseEntity<PagedModel<Payment>>
+pserv -> prepo : payments := findAll(...): Page<Payment>
+
+note right of pserv
+  //Para cada pago se obtiene la reservación a la que pertence//
+end note
+pserv -> remicro : * [i=1..N] := GET /reservation/{reservationId}
+remicro -> reserv : getReservation(id: int): ResponseEntity<Reservation>
+reserv -> rerepo : findReservationById(id: int): Optional<Reservation>
+
+note right of ui
+<code>
+{
+  "pendingPayments": [
+    {
+      "total": int, "date": "yyyy-mm-dd"
+      "currency": "EUR", "reservation": {...}
+    }, ...
+  ], "page": "1", ...
+}
+</code>
+end note
+ui -> ui : Renderiza página con los datos
+
+
+Usuario -> ui : Selecciona la reserva a pagar
+ui -> vue : GET /services/pay
+vue -> ui : HTML+CSS+JS
+ui -> ui : Renderiza página
+
+Usuario -> ui : Completa la información de pago
+Usuario -> ui : Da clic en ""Realizar pago por €€€""
+
+note right of ui
+// En el API de la arquitectura, //
+// este endpoint no existe (PUT) //
+end note
+ui -> api : PUT /payments
+api -> pmicro : PUT /payments
+pmicro -> pserv : async updatePayment(...): ResponseEntity<Void>
+pserv -> paygate : POST /pay
+pserv -> prepo : save(p: Payment)
+
+pserv -> vimicro : PUT /vehicles/{vehicleId}
+vimicro -> viserv : updateAvailableVehiclesInDates(...): ResponseEntity<Void>
+viserv -> virepo : save(vehicleId: int, available: int)
+
+pserv -> nmicro : POST /user/{userId}
+nmicro -> nserv : async pushNotificationToUser(...): ResponseEntity<Void>
+
+@enduml

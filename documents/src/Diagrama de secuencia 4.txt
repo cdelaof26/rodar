@@ -1,0 +1,70 @@
+@startuml
+title Diagrama de secuencia: Generar reporte de analíticas quincenal
+
+
+actor Proveedor
+participant "__:UI__" as ui
+
+participant "__:API Gateway__" as api
+
+box "Front-end provider microservice" #F0F0F0
+  participant "__:App.js__" as vue
+end box
+
+box "Usage analytics microservice" #F0F0F0
+  participant "__:UsageController__" as uamicro
+  participant "__:UsageService__" as uaserv
+  participant "__:UsageRepository__" as uarepo
+  participant "__:Batch__" as batch
+end box
+
+
+note right of batch
+//Siempre esta en ejecución. Si el día es primero o quince, //
+//para todos los proveedores se generan reportes//
+end note
+
+activate batch
+batch -> batch : * [_=1..inf] date := today.getDate()
+batch -> batch : * [date.day = 1 or date.day == 15 then k=1..inf] report := generateProviderReport(k, ...)
+
+batch -> batch : report := pdfAsBase64Data(report: bytes)
+note right of batch
+body {
+  "providerId": int,
+  "report": base64_data
+}
+end note
+
+batch -> uamicro : POST /provider/{providerId}/analytics
+deactivate batch
+
+uamicro -> uaserv : storeReport(...): ResponseEntity<Void>
+uaserv -> uaserv : r := base64StringAsPDF(...): bytes
+uaserv -> uarepo : save(r: bytes)
+
+
+Proveedor -> ui : Accede a la página de analíticas
+ui -> vue : GET /services/payments/pending
+note right of ui
+<code>
+<!DOCTYPE html>
+<html lang="es">
+  ...
+</html>
+</code>
+end note
+vue -> ui : HTML+CSS+JS
+ui -> ui : Renderiza página
+
+
+ui -> api : GET /provider/{providerId}/analytics
+api -> uamicro : GET /provider/{providerId}/analytics
+
+uamicro -> uaserv : getReports(...): ResponseEntity<PagedModel<bytes>>
+uaserv -> uarepo : findAll(...): Page<bytes>
+
+
+ui -> ui : Renderiza página con los datos
+
+@enduml

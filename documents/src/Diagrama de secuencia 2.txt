@@ -1,0 +1,168 @@
+@startuml
+title Diagrama de secuencia: Reservar vehículo (...)
+
+
+actor Usuario
+participant "__:UI__" as ui
+
+participant "__:API Gateway__" as api
+
+box "Front-end user microservice" #F0F0F0
+  participant "__:App.js__" as vue
+end box
+
+box "Vehicles search microservice" #F0F0F0
+  participant "__:VehiclesController__" as vsmicro
+  participant "__:VehiclesService__" as vsserv
+  participant "__:VehiclesRepository__" as vsrepo
+end box
+
+box "Reservation microservice" #F0F0F0
+  participant "__:ReservationController__" as remicro
+  participant "__:ReservationService__" as reserv
+  participant "__:ReservationRepository__" as rerepo
+end box
+
+box "Vehicles inventory microservice" #F0F0F0
+  participant "__:InventoryController__" as vimicro
+  participant "__:InventoryService__" as viserv
+  participant "__:InventoryRepository__" as virepo
+end box
+
+box "Taxes microservice" #F0F0F0
+  participant "__:TaxesController__" as tmicro
+  participant "__:TaxesService__" as tserv
+  participant "__:TaxesRepository__" as trepo
+end box
+
+box "Payments microservice" #F0F0F0
+  participant "__:PaymentController__" as pmicro
+  participant "__:PaymentService__" as pserv
+  participant "__:PaymentRepository__" as prepo
+end box
+
+
+Usuario -> ui : Accede a la página de un vehículo
+ui -> vue : GET /services/vehicle
+note right of ui
+<code>
+<!DOCTYPE html>
+<html lang="es">
+  ...
+</html>
+</code>
+end note
+vue -> ui : HTML+CSS+JS
+ui -> ui : Renderiza página
+
+ui -> api : GET /vehicles/{vehicleId}
+api -> vsmicro : GET /vehicles/{vehicleId}
+
+vsmicro -> vsserv : getVehicle(vehicleId: int): ResponseEntity<Vehicle>
+vsserv -> vsrepo : findVehicleById(id: int): Optional<Vehicle>
+
+note right of ui
+<code>
+{
+  "type": "suv", "brand": "Suzuki",
+  "provider": "José", "pricingPerDay": 10,
+  "currency": "EUR", "available": 10, ...
+}
+</code>
+end note
+ui -> ui : Renderiza página con los datos
+
+
+Usuario -> ui : Rellena fechas de alquiler
+Usuario -> ui : Da clic en ""Reservar vehículo por €€€""
+ui -> ui : [0 < endDate - startDate < 31] := Valida fechas
+
+
+note right of ui
+<code>
+body {
+  "startDate": "yyyy-mm-dd",
+  "endDate": "yyyy-mm-dd",
+  "vehicleId": 0,
+  "location": "Madrid",
+  "userId": int
+}
+</code>
+end note
+ui -> api : POST /reservations
+
+
+api -> remicro : POST /reservations
+remicro -> reserv : createReservation(...): ResponseEntity<Void>
+
+reserv -> reserv : days := endDate - startDate
+reserv -> reserv : [0 < days < 31 or endDate > today] := validDates
+
+reserv -> vimicro : GET /vehicles/{vehicleId}?startDate=&endDate=
+vimicro -> viserv : getVehicleAvailableAmountByDate(...): ResponseEntity<Integer>
+viserv -> virepo : findVehicleAvailableAmountBy...(...): Optional<Integer>
+reserv -> reserv : [available > 1] := isVehicleAvailable
+
+reserv -> tmicro : GET /vehicle/rate/{vehicleId}?location=
+tmicro -> tserv : getVehiclePricing(vehicleId: int): ResponseEntity<Price>
+tserv -> trepo : pricing := getPricingByVehicle(vehicleId: int): Price
+tserv -> tserv : pricing := addTaxes(pricing: Price, location): Price
+
+reserv -> reserv : computeTotal(vehicleRate, days)
+reserv -> rerepo : save(r: Reservation)
+
+note right of reserv
+// En el API de la arquitectura, este endpoint se usa para realizar el pago, //
+// sin embargo, parece mejor que POST sea para crear y PUT para pagar. //
+
+<code>
+body {
+  "total": int,
+  "currency": "EUR",
+  "userId": int,
+  "reservationId": int,
+  "date": "yyyy-mm-dd"
+}
+</code>
+end note
+reserv -> pmicro : POST /payments
+pmicro -> pserv : createPayment(...): ResponseEntity<Void>
+pserv -> prepo : save(p: Payment)
+
+
+note right of ui
+<code>
+HTTP/1.1 201 Created
+Location: /reservations/{reservationId}
+</code>
+end note
+
+ui -> vue : GET /services/reservationPage
+vue -> ui : HTML+CSS+JS
+ui -> ui : Renderiza página
+
+
+ui -> api : GET /reservations/{reservationId}
+
+api -> remicro : GET /reservations/{reservationId}
+remicro -> reserv : getReservation(reservationId: int): ResponseEntity<Reservation>
+reserv -> rerepo : reservation := getReservationById(reservationId: int): Optional<Reservation>
+
+reserv -> vsmicro : GET /vehicles/{vehicleId}
+vsmicro -> vsserv : getVehicle(vehicleId: int): ResponseEntity<Vehicle>
+vsserv -> vsrepo : findVehicleById(id: int): Optional<Vehicle>
+
+reserv -> reserv : reservation.appendVehicleData(...)
+
+
+note right of ui
+<code>
+{
+  "status": "pending_payment", "reservationUUID": "...",
+  "vehicle": {...}, "pricing": {...}
+}
+</code>
+end note
+ui -> ui : Renderiza página con los datos
+
+@enduml

@@ -1,0 +1,109 @@
+@startuml
+title Diagrama de secuencia: Buscar vehículos (...)
+
+
+actor Usuario
+participant "__:UI__" as ui
+
+participant "__:API Gateway__" as api
+
+box "Front-end user microservice" #F0F0F0
+  participant "__:App.js__" as vue
+end box
+
+box "Vehicles search microservice" #F0F0F0
+  participant "__:VehiclesController__" as vsmicro
+  participant "__:VehiclesService__" as vsserv
+  participant "__:VehiclesRepository__" as vsrepo
+end box
+
+box "Vehicles inventory microservice" #F0F0F0
+  participant "__:InventoryController__" as vimicro
+  participant "__:InventoryService__" as viserv
+  participant "__:InventoryRepository__" as virepo
+end box
+
+box "Provider management microservice" #F0F0F0
+  participant "__:ProvidersController__" as pmmicro
+  participant "__:ProvidersService__" as pmserv
+  participant "__:ProvidersRepository__" as pmrepo
+end box
+
+box "Taxes microservice" #F0F0F0
+  participant "__:TaxesController__" as tmicro
+  participant "__:TaxesService__" as tserv
+  participant "__:TaxesRepository__" as trepo
+end box
+
+
+Usuario -> ui : Accede a la página de búsqueda
+ui -> vue : GET /services/search/vehicles
+note right of ui
+<code>
+<!DOCTYPE html>
+<html lang="es">
+  ...
+</html>
+</code>
+end note
+vue -> ui : HTML+CSS+JS
+ui -> ui : Renderiza página
+ui -> ui : location := determinateUserLocation()
+
+
+Usuario -> ui : Rellena campos de búsqueda
+Usuario -> ui : Hace clic en ""Buscar""
+ui -> api : GET /vehicles?location=&startDate=&endDate=&types=&prices=&currency=
+
+
+api -> vsmicro : GET /vehicles?location=&startDate=&endDate=&types=&prices=&currency=
+vsmicro -> vsserv : getVehicles(...): ResponseEntity<PagedModel<Vehicle>>
+vsserv -> vsrepo : vehicles := findVehiclesBy...(): Page<Vehicle>
+
+
+note right of vsserv
+  //Para cada vehículo se filtra por disponibilidad//
+end note
+vsserv -> vimicro : * [i=1..N] := GET /vehicles/{vehicleId}?startDate=&endDate=
+vimicro -> viserv : getVehicleAvailableAmount(...): ResponseEntity<Integer>
+viserv -> virepo : findVehicleAvailableAmountBy...(...): Optional<Integer>
+
+
+vsserv -> vsserv : vehicles := filterAvailable(...)
+note right of vsserv
+  //Para cada vehículo se busca la divisa//
+end note
+vsserv -> pmmicro : * [i=1..N] := GET /providers/{providerId}
+pmmicro -> pmserv : getProvider(providerId: int): ResponseEntity<Provider>
+pmserv -> pmrepo : findProviderById(id: int): Optional<Provider>
+
+
+note right of vsserv
+  //Para cada vehículo se convierte la divisa C1 (proveedor) a C2 (usuario)//
+end note
+vsserv -> tmicro : * [i=1..N] := GET /currencies/{C1}/rates?to={C2}&amount={A}&location=
+tmicro -> tserv : getPricing(...): ResponseEntity<Price>
+tserv -> trepo : C1 := findCurrencyByName(name: str): Optional<Currency>
+tserv -> trepo : C2 := findCurrencyByName(name: str): Optional<Currency>
+tserv -> tserv : pricing := convertCurrency(C1: Currency, C2: Currency, A: int): Price
+tserv -> tserv : pricing := addTaxes(pricing: Price, location): Price
+
+vsserv -> vsserv : vehicles := filterByPricing(...)
+
+
+note right of ui
+<code>
+{
+  "vehicles": [
+    {
+      "type": "suv", "brand": "Suzuki",
+      "provider": "José", "pricingPerDay": 10,
+      "currency": "EUR", "available": 10, ...
+    }, ...
+  ], "page": "1", ...
+}
+</code>
+end note
+ui -> ui : Renderiza página con los datos
+
+@enduml
