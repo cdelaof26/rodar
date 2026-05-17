@@ -24,6 +24,11 @@ que pueden renderizarse con PlantUML y, además, los casos de uso.
 Por otra parte, en ```rendered```, se encuentra la arquitectura del sistema y 
 los diagramas anteriores en formato ```svg```.
 
+## Ejecución
+
+La información necesaria para poner en marcha ```rodar```, se encuentrá en el fichero
+[src/README.md](src/README.md)
+
 
 ## Microservicios y endpoints
 
@@ -96,7 +101,7 @@ por simplificar la implementación, los dos se unifican en uno
 
 ## Historial de cambios
 
-### v0.0.3 Implementación faltante del microservicio ```pmmicro```
+### v0.0.3-1 Implementación faltante del microservicio ```pmmicro```
 - **TODO**: Testing
 
 ### v0.0.2 Microservicio ```pmmicro```

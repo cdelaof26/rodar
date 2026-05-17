@@ -31,14 +31,12 @@ chmod +x rename_props.sh
 # Ejecución de microservicios individuales
 
 Los diferentes microservicios se pueden arrancar de forma individual a través de la 
-construcción de su imagen,
+construcción de su imagen, por ejemplo con ```pmmicro```,
 
 ```bash
-# Ingresa a la carpeta del directorio, por ejemplo de 'pmmicro'
-cd pmmicro
-
 # Build con docker
-docker build --tag src-pmmicro .
+docker build --build-arg ARTIFACT=pmmicro-0.0.2.jar \
+    --tag src-pmmicro --file backend.Dockerfile pmmicro
 
 # Levanta el contenedor, donde,
 #   server-domain: es la IP o dominio del servidor con la base de datos
