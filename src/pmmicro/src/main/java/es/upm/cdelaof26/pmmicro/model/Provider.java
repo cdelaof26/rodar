@@ -23,7 +23,10 @@ public class Provider extends RepresentationModel<Provider> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "Identificador autoincremental", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private int providerId;
+    private Integer id;
+    
+    @Schema(description = "Nombre completo", pattern = ".{1,128}", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String name;
     
     @Schema(description = "Compañía", pattern = ".{0,128}", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String company;
@@ -37,27 +40,36 @@ public class Provider extends RepresentationModel<Provider> {
     private String phone;
     
     @NotEmpty(message = "La localización es obligatoria")
-    @Schema(description = "Localización", pattern = ".{0,128}", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Localización", pattern = ".{1,128}", requiredMode = Schema.RequiredMode.REQUIRED)
     private String location;
 
     
     
     public Provider() { }
 
-    public Provider(int providerId, String company, String email, String phone, String location) {
-        this.providerId = providerId;
+    public Provider(Integer id, String name, String company, String email, String phone, String location) {
+        this.id = id;
+        this.name = name;
         this.company = company;
         this.email = email;
         this.phone = phone;
         this.location = location;
     }
 
-    public int getProviderId() {
-        return providerId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setProviderId(int providerId) {
-        this.providerId = providerId;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCompany() {

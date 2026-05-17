@@ -96,6 +96,9 @@ por simplificar la implementación, los dos se unifican en uno
 
 ## Historial de cambios
 
+### v0.0.3 Implementación faltante del microservicio ```pmmicro```
+- **TODO**: Testing
+
 ### v0.0.2 Microservicio ```pmmicro```
 - Creación del ```docker-compose.yml```
 

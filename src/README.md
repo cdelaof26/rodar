@@ -44,11 +44,11 @@ docker build --tag src-pmmicro .
 #   server-domain: es la IP o dominio del servidor con la base de datos
 #
 docker run --detach --name pmmicro src-pmmicro \
-	--env "SPRING_DATASOURCE_URL=jdbc:mariadb://server-domain:3306/pmdb?useSSL=false&serverTimezone=UTC" \
-	--env "SPRING_DATASOURCE_USERNAME=${DB_USER}" \
-	--env "SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}" \
-	--network pmmicro-net \
-	--publish 3306:3306
+    --env "SPRING_DATASOURCE_URL=jdbc:mariadb://server-domain:3306/pmdb?useSSL=false&serverTimezone=UTC" \
+    --env "SPRING_DATASOURCE_USERNAME=${DB_USER}" \
+    --env "SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}" \
+    --network pmmicro-net \
+    --publish 3306:3306
 ```
 
 # Ejecución completa
@@ -66,4 +66,23 @@ Para cada microservicio, se puede acceder a Swagger a través de la URL,
 
 ```
 http://container-ip:exposed-port/api/v1/swagger-ui/index.html
+```
+
+# SonarQube
+
+```bash
+# Levanta un contenedor (embedded database con persistencia en volumen)
+docker run --name sonar-inst \
+    --volume sonar-data:/opt/sonarqube/data \
+    --publish 9000:9000 --detach sonarqube:community
+```
+
+```bash
+# Ejecuta el analisís con Maven
+#
+mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+  -Dsonar.projectKey=PROJECT_KEY \
+  -Dsonar.projectName='PROJECT_NAME' \
+  -Dsonar.host.url=http://CONTAINER-IP:9000 \
+  -Dsonar.token=TOKEN
 ```

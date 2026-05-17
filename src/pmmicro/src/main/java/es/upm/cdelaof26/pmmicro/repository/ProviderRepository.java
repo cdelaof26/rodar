@@ -9,4 +9,8 @@ import org.springframework.stereotype.Repository;
  * @author cristopher
  */
 @Repository
-public interface ProviderRepository extends JpaRepository<Provider, Integer> { }
+public interface ProviderRepository extends JpaRepository<Provider, Integer> {
+    public boolean existsByEmail(String email);
+    
+    public boolean existsByPhone(String phone);
+}

@@ -3,3 +3,4 @@
 spring_initializer.txt
 *.DS_Store
 *.mwb.bak
+src/*.txt

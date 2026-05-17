@@ -3,10 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.6</version>
-		<relativePath/> <!-- lookup parent from repository -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-parent</artifactId>
+            <version>4.0.6</version>
+            <relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>es.upm.cdelaof26</groupId>
 	<artifactId>pmmicro</artifactId>
@@ -32,13 +32,19 @@
             </developer>
 	</developers>
 	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
+            <connection/>
+            <developerConnection/>
+            <tag/>
+            <url/>
 	</scm>
 	<properties>
-		<java.version>25</java.version>
+            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            <java.version>25</java.version>
+
+            <jacoco.version>0.8.14</jacoco.version>
+            <sonar.scm.provider>git</sonar.scm.provider>
+            <sonar.language>java</sonar.language>
+            <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -88,6 +94,11 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+                <dependency>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.8.14</version>
+                </dependency>
 	</dependencies>
 
 	<build>
@@ -96,6 +107,27 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+                        <plugin>
+                                <groupId>org.jacoco</groupId>
+                                <artifactId>jacoco-maven-plugin</artifactId>
+                                <version>${jacoco.version}</version>
+                                <executions>
+                                        <execution>
+                                                <id>prepare-agent</id>
+                                                <goals>
+                                                        <goal>prepare-agent</goal>
+                                                </goals>
+                                                <phase>test-compile</phase>
+                                        </execution>
+                                        <execution>
+                                                <id>report</id>
+                                                <goals>
+                                                        <goal>report</goal>
+                                                </goals>
+                                                <phase>test</phase>
+                                        </execution>
+                                </executions>
+                        </plugin>
 		</plugins>
 	</build>
 
