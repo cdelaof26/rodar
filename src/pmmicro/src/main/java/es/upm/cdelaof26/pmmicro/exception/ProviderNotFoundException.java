@@ -4,7 +4,7 @@ package es.upm.cdelaof26.pmmicro.exception;
  * RuntimeException thrown when a provider is not found by its id
  * @author cristopher
  */
-public class ProviderNotFound extends RuntimeException {
+public class ProviderNotFoundException extends RuntimeException {
     /**
      * Creates a new exception with a message that reads,
      * 
@@ -12,7 +12,7 @@ public class ProviderNotFound extends RuntimeException {
      * 
      * @param id the provider id
      */
-    public ProviderNotFound(int id) {
+    public ProviderNotFoundException(int id) {
         super(String.format("El proveedor con el identificador '%d' no existe", id));
     }
 }

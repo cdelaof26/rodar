@@ -1,4 +1,4 @@
-package es.upm.cdelaof26.pmmicro.exception;
+package es.upm.cdelaof26.vimicro.exception;
 
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
@@ -12,15 +12,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice
 public class ExceptionAdvise {
-    @ExceptionHandler(FieldAlreadyTakenException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorMessage alreadyInUseHandler(FieldAlreadyTakenException ex) {
+    @ExceptionHandler(InvalidDateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage incorrectDateHandler(InvalidDateException ex) {
         return new ErrorMessage(ex.getMessage());
     }
     
-    @ExceptionHandler(ProviderNotFoundException.class)
+    @ExceptionHandler(VehicleAlreadyExistException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorMessage vehicleFoundExceptionHandler(VehicleAlreadyExistException ex) {
+        return new ErrorMessage(ex.getMessage());
+    }
+    
+    @ExceptionHandler(InventoryNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorMessage providerNotFoundHandler(ProviderNotFoundException ex) {
+    public ErrorMessage providerNotFoundHandler(InventoryNotFoundException ex) {
         return new ErrorMessage(ex.getMessage());
     }
 }

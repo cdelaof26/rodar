@@ -7,6 +7,10 @@ microservicios de Rodar.
     * ```pmmicro``` es el microservicio para la gestión de los proveedores de vehículos.
     * Puerto expuesto: 8080
 
+* Vehicles inventory microservice
+    * ```vimicro``` es el microservicio para la gestión del inventario de vehículos.
+    * Puerto expuesto: 8081
+
 # Requisitos y configuración
 
 Para el levantamiento del sistema, o de microservicios individuales, se require de Docker.

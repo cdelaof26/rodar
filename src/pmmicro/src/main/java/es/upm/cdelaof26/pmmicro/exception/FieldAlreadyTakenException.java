@@ -4,7 +4,7 @@ package es.upm.cdelaof26.pmmicro.exception;
  * RuntimeException thrown when an unique field is taken
  * @author cristopher
  */
-public class FieldAlreadyTaken extends RuntimeException {
+public class FieldAlreadyTakenException extends RuntimeException {
     /**
      * Creates a new exception with a message that reads,
      * 
@@ -13,7 +13,7 @@ public class FieldAlreadyTaken extends RuntimeException {
      * @param field the field
      * @param takenValue the value already in use
      */
-    public FieldAlreadyTaken(String field, String takenValue) {
+    public FieldAlreadyTakenException(String field, String takenValue) {
         super(String.format("El %s '%s' ya está registrado", field, takenValue));
     }
 }

@@ -1,7 +1,7 @@
 package es.upm.cdelaof26.pmmicro.service;
 
-import es.upm.cdelaof26.pmmicro.exception.FieldAlreadyTaken;
-import es.upm.cdelaof26.pmmicro.exception.ProviderNotFound;
+import es.upm.cdelaof26.pmmicro.exception.FieldAlreadyTakenException;
+import es.upm.cdelaof26.pmmicro.exception.ProviderNotFoundException;
 import es.upm.cdelaof26.pmmicro.repository.ProviderRepository;
 import java.util.List;
 import es.upm.cdelaof26.pmmicro.model.Provider;
@@ -43,7 +43,7 @@ public class ProviderService {
     public Provider getProvider(Integer providerId) {
         if (!existsById(providerId)) {
             l.error(String.format("Providers with id %d doesn't exist", providerId));
-            throw new ProviderNotFound(providerId);
+            throw new ProviderNotFoundException(providerId);
         }
         
         return repository.findById(providerId).get();
@@ -52,12 +52,12 @@ public class ProviderService {
     public Provider save(Provider p) {
         if (existsByEmail(p.getEmail())) {
             l.error(String.format("Email '%s' is already taken", p.getEmail()));
-            throw new FieldAlreadyTaken("correo", p.getEmail());
+            throw new FieldAlreadyTakenException("correo", p.getEmail());
         }
         
         if (existsByPhone(p.getPhone())) {
             l.error(String.format("Phone '%s' is already taken", p.getPhone()));
-            throw new FieldAlreadyTaken("número telefónico", p.getPhone());
+            throw new FieldAlreadyTakenException("número telefónico", p.getPhone());
         }
         
         return repository.save(p);

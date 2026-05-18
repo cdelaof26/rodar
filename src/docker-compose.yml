@@ -1,52 +1,106 @@
+x-db-common: &db-common
+  environment: &db-common-env
+    MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+    MARIADB_USER: ${DB_USER}
+    MARIADB_PASSWORD: ${DB_PASSWORD}
+
+  image: mariadb:12.3.1-ubi10-rc
+  ports:
+      - 3306:3306
+  restart: always
+  healthcheck:
+    test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+    interval: 20s
+    timeout: 20s
+    retries: 2
+    start_period: 10s
+
+
+x-micro-common: &micro-common
+    environment: &micro-common-env
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
+    build: &micro-common-build
+      dockerfile: ../backend.Dockerfile
+    restart: always
+
+
 services:
   pmmicro-db:
-    environment:
-      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
-      MARIADB_USER: ${DB_USER}
-      MARIADB_PASSWORD: ${DB_PASSWORD}
+    <<: *db-common
+    environment: 
+      <<: *db-common-env
       MARIADB_DATABASE: "pmdb"
 
     container_name: pmmicro-db
-    image: mariadb:12.3.1-ubi10-rc
-    ports:
-      - 3306:3306
     volumes:
       - pmmicro-db-data:/var/lib/mysql
       - ./pmmicro/db:/docker-entrypoint-initdb.d
-    restart: always
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
-      interval: 20s
-      timeout: 20s
-      retries: 2
-      start_period: 10s
     networks:
       - pmmicro-net
 
   pmmicro:
+    <<: *micro-common
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mariadb://pmmicro-db:3306/pmdb?useSSL=false&serverTimezone=UTC
-      - SPRING_DATASOURCE_USERNAME=${DB_USER}
-      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
-
+      <<: *micro-common-env
+      SPRING_DATASOURCE_URL: jdbc:mariadb://pmmicro-db:3306/pmdb?useSSL=false&serverTimezone=UTC
+      
     container_name: pmmicro
-    build:
+    build: 
+      <<: *micro-common-build
       context: pmmicro
-      dockerfile: ../backend.Dockerfile
       args:
-        ARTIFACT: pmmicro-0.0.1.jar
+        ARTIFACT: pmmicro-0.0.2.jar
     ports:
       - 8080:8080
     depends_on:
       pmmicro-db:
         condition: service_healthy
-    restart: always
     networks:
       - pmmicro-net
 
+
+  vimicro:
+    <<: *micro-common
+    environment:
+      <<: *micro-common-env
+      SPRING_DATASOURCE_URL: jdbc:mariadb://vimicro-db:3306/vidb?useSSL=false&serverTimezone=UTC
+      
+    container_name: vimicro
+    build: 
+      <<: *micro-common-build
+      context: vimicro
+      args:
+        ARTIFACT: vimicro-0.0.1.jar
+    ports:
+      - 8081:8080
+    depends_on:
+      vimicro-db:
+        condition: service_healthy
+    networks:
+      - vimicro-net
+
+  vimicro-db:
+    <<: *db-common
+    environment:
+      <<: *db-common-env
+      MARIADB_DATABASE: "vidb"
+
+    container_name: vimicro-db
+    volumes:
+      - vimicro-db-data:/var/lib/mysql
+      - ./vimicro/db:/docker-entrypoint-initdb.d
+    networks:
+      - vimicro-net
+
 volumes:
   pmmicro-db-data: {}
+  vimicro-db-data: {}
 
 networks:
   pmmicro-net:
+    driver: bridge
+
+  vimicro-net:
     driver: bridge

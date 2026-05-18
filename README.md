@@ -44,7 +44,7 @@ La información necesaria para poner en marcha ```rodar```, se encuentrá en el 
 
 
 <details>
-    <summary><b>Vehicles microservice (vsmicro)</b></summary>
+    <summary><b>Vehicles search microservice (vsmicro)</b></summary>
 
 <pre>
     POST /vehicles
@@ -52,8 +52,9 @@ La información necesaria para poner en marcha ```rodar```, se encuentrá en el 
     GET  /vehicles/{vehicleId}
 </pre>
 
-<b>Nota</b>: las operaciones GET pertenecen al Vehicles search microservice, 
-por simplificar la implementación, los dos se unifican en uno
+<b>Nota</b>: la operación POST corresponde al endpoint privado que accede 
+Vehicles microservice a través de un ```Message Broker``` para nuevas 
+entradas. Por simplificar la implementación, se utiliza directamente.
 </details>
 
 
@@ -62,6 +63,7 @@ por simplificar la implementación, los dos se unifican en uno
 
 <pre>
     POST /vehicles
+    GET  /vehicles  # Testing
     GET  /vehicles/{vehicleId}?startDate=&endDate=
     PUT  /vehicles/{vehicleId}
 </pre>
@@ -100,6 +102,8 @@ por simplificar la implementación, los dos se unifican en uno
 
 
 ## Historial de cambios
+
+### v0.0.4 Microservicio ```vimicro```
 
 ### v0.0.3-1 Implementación faltante del microservicio ```pmmicro```
 - **TODO**: Testing

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-directories=("pmmicro")
+directories=("pmmicro", "vimicro")
 
 for dir in "${directories[@]}"; do
     if [ -d "$dir" ]; then
