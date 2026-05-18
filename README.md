@@ -37,8 +37,14 @@ La información necesaria para poner en marcha ```rodar```, se encuentrá en el 
 
 <pre>
     POST /providers
+        Crea un nuevo proveedor
+
     GET  /providers/{providersId}
+        Obtiene la información de un proveedor
+        - Casos de uso: 1
+
     GET  /providers  # Testing
+        Obtiene todos los proveedores
 </pre>
 </details>
 
@@ -63,9 +69,18 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 
 <pre>
     POST /vehicles
+        Puede crear una nueva entrada de inventario y registra las placas de un vehículo
+
     GET  /vehicles  # Testing
+        Obtiene todos los inventarios
+
     GET  /vehicles/{vehicleId}?startDate=&endDate=
+        Obtiene la cantidad de vehículos disponibles en un inventario dado un rango de fechas
+        - Casos de uso: 1, 2
+
     PUT  /vehicles/{vehicleId}
+        Actualiza el estado 'in_use' y/o agrega fechas/usuario a un vehículo
+        - Casos de uso: 3
 </pre>
 </details>
 
@@ -103,7 +118,9 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 
 ## Historial de cambios
 
-### v0.0.4 Microservicio ```vimicro```
+### v0.0.4-1 Implementación faltante del microservicio ```vimicro```
+- **TODO**: Testing
+- **TODO**: Add sample records in the db
 
 ### v0.0.3-1 Implementación faltante del microservicio ```pmmicro```
 - **TODO**: Testing

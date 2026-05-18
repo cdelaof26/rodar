@@ -30,8 +30,9 @@ public class RentDate {
     
     public RentDate() { }
 
-    public RentDate(int id, Date startDate, Date endDate) {
+    public RentDate(int id, String licensePlate, Date startDate, Date endDate) {
         this.id = id;
+        this.licensePlate = licensePlate;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -44,6 +45,14 @@ public class RentDate {
         this.id = id;
     }
 
+    public String getLicensePlate() {
+        return licensePlate;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
+    }
+    
     public Date getStartDate() {
         return startDate;
     }

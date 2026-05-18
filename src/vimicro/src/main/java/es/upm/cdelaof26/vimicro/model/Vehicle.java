@@ -23,7 +23,7 @@ public class Vehicle extends RepresentationModel<Vehicle> {
     @Schema(description = "Placa del coche", pattern = ".{7}", requiredMode = Schema.RequiredMode.REQUIRED)
     private String licensePlate;
     
-    
+    // idk what to do with this... Won't start without whis, though
     @OneToMany
     @JoinColumn(name = "licensePlate", referencedColumnName = "licensePlate")
     @Schema(description = "Vehiculos de renta", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -37,7 +37,7 @@ public class Vehicle extends RepresentationModel<Vehicle> {
     @Schema(description = "Identificador del usuario", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer userId;
     
-    @Schema(description = "Bandera que indica si esta en uso", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @Schema(description = "Bandera que indica si esta en uso", requiredMode = Schema.RequiredMode.REQUIRED)
     private Boolean inUse;
 
     

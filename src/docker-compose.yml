@@ -5,8 +5,6 @@ x-db-common: &db-common
     MARIADB_PASSWORD: ${DB_PASSWORD}
 
   image: mariadb:12.3.1-ubi10-rc
-  ports:
-      - 3306:3306
   restart: always
   healthcheck:
     test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
@@ -72,7 +70,7 @@ services:
       <<: *micro-common-build
       context: vimicro
       args:
-        ARTIFACT: vimicro-0.0.1.jar
+        ARTIFACT: vimicro-0.0.2.jar
     ports:
       - 8081:8080
     depends_on:

@@ -53,6 +53,15 @@ docker run --detach --name pmmicro src-pmmicro \
     --publish 3306:3306
 ```
 
+# Ejecución de microservicios individuales con ```compose```
+
+La ejecución de un microservicio individual con ```docker compose``` se hace con el 
+siguiente comando,
+
+```bash
+docker compose up --detach --build [nombre_del_micro]
+```
+
 # Ejecución completa
 
 La ejecución del sistema en su totalidad, incluida la construcción de las imagenes, 

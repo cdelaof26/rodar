@@ -16,26 +16,36 @@ import es.upm.cdelaof26.vimicro.repository.InventoryRepository;
 public class InventoryService {
     private final Logger l = LoggerFactory.getLogger(InventoryService.class);
     
-    private final InventoryRepository inventoryRepository;
+    private final InventoryRepository repository;
     
-    public InventoryService(InventoryRepository inventoryRepository) {
-        this.inventoryRepository = inventoryRepository;
+    public InventoryService(InventoryRepository repository) {
+        this.repository = repository;
     }
     
     public List<Inventory> getAllInventories() {
-        return inventoryRepository.findAll();
+        return repository.findAll();
     }
     
     public Inventory getInventoryById(int inventoryId) {
-        if (!inventoryRepository.existsById(inventoryId)) {
+        l.debug(String.format("Getting inventory '%d'", inventoryId));
+        if (!repository.existsById(inventoryId)) {
             l.error(String.format("Inventory with id %d doesn't exist", inventoryId));
             throw new InventoryNotFoundException(inventoryId);
         }
         
-        return inventoryRepository.findById(inventoryId).get();
+        return repository.findById(inventoryId).get();
     }
     
     public Inventory newInventory(int inventoryId) {
-        return inventoryRepository.save(new Inventory(inventoryId, 0));
+        l.debug(String.format("Creating new inventory...", inventoryId));
+        return repository.save(new Inventory(inventoryId, 0));
+    }
+    
+    public Inventory getOrCreateInventory(int inventoryId) {
+        try {
+            return getInventoryById(inventoryId);
+        } catch (InventoryNotFoundException ex) {
+            return newInventory(inventoryId);
+        }
     }
 }
