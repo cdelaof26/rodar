@@ -42,18 +42,23 @@ public class Provider extends RepresentationModel<Provider> {
     @NotEmpty(message = "La localización es obligatoria")
     @Schema(description = "Localización", pattern = ".{1,128}", requiredMode = Schema.RequiredMode.REQUIRED)
     private String location;
+    
+    @NotEmpty(message = "Se requiere de una divisa")
+    @Schema(description = "Divisa", pattern = ".{1,4}", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String currency;
 
     
     
     public Provider() { }
 
-    public Provider(Integer id, String name, String company, String email, String phone, String location) {
+    public Provider(Integer id, String name, String company, String email, String phone, String location, String currency) {
         this.id = id;
         this.name = name;
         this.company = company;
         this.email = email;
         this.phone = phone;
         this.location = location;
+        this.currency = currency;
     }
 
     public Integer getId() {
@@ -102,5 +107,13 @@ public class Provider extends RepresentationModel<Provider> {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

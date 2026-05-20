@@ -2,6 +2,8 @@ package es.upm.cdelaof26.vimicro.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.sql.Date;
@@ -14,7 +16,8 @@ import java.sql.Date;
 @Table(schema = "RentDate")
 public class RentDate {
     @Id
-    @Schema
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Identificador autoincremental", requiredMode = Schema.RequiredMode.REQUIRED)
     private int id;
     
     @Schema(description = "Placa del vehículo", requiredMode = Schema.RequiredMode.REQUIRED)

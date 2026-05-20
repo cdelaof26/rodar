@@ -64,9 +64,9 @@ public class InventoryController {
     @PostMapping
     public ResponseEntity<Void> createVehicle(@RequestBody @Valid VehicleCreationDto v) {
         l.debug("Creating new vehicle...");
-        Inventory i = inventoryService.getOrCreateInventory(v.getVehicleId());
-        vehicleService.createVehicle(v, i);
-        return ResponseEntity.created(self.slash(i.getId()).toUri()).build();
+        return ResponseEntity.created(self.slash(
+            vehicleService.createVehicle(v).getInventory().getId()).toUri()
+        ).build();
     }
     
     @PutMapping("/{vehicleId}")

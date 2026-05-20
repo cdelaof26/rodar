@@ -118,9 +118,13 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 
 ## Historial de cambios
 
-### v0.0.4-1 Implementación faltante del microservicio ```vimicro```
+### v0.0.5-1 Datos de prueba para ```pmmicro``` y ```vimicro```
+- En ```vimicro``` ahora la base de datos se encarga de la creación 
+  del inventario cuando se intenta insertar un nuevo vehículo y este no existe
+
+### v0.0.5 Implementación faltante del microservicio ```vimicro```
 - **TODO**: Testing
-- **TODO**: Add sample records in the db
+- ~~**TODO**: Add sample records in the db~~
 
 ### v0.0.3-1 Implementación faltante del microservicio ```pmmicro```
 - **TODO**: Testing

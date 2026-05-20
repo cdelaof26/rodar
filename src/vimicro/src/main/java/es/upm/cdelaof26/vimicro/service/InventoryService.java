@@ -35,17 +35,4 @@ public class InventoryService {
         
         return repository.findById(inventoryId).get();
     }
-    
-    public Inventory newInventory(int inventoryId) {
-        l.debug(String.format("Creating new inventory...", inventoryId));
-        return repository.save(new Inventory(inventoryId, 0));
-    }
-    
-    public Inventory getOrCreateInventory(int inventoryId) {
-        try {
-            return getInventoryById(inventoryId);
-        } catch (InventoryNotFoundException ex) {
-            return newInventory(inventoryId);
-        }
-    }
 }

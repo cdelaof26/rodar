@@ -1,0 +1,25 @@
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('0123BKL','1',1);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('2745RNV','1',1);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('8390TQP','1',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('4501JZR','2',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('6632MFW','2',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('9918KSD','2',1);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('1076HXL','3',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('3284VBN','3',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('7150CRG','4',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('5869PZT','5',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('2407LQV','5',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('8035SJM','5',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('4572DKH','6',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('6903NXG','6',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('1548WRY','6',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('7721FPC','7',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('0319ZLB','8',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('4886YTM','9',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('9254QFH','10',0);
+INSERT INTO `vehicle` (`license_plate`,`inventory_id`,`in_use`) VALUES ('6117GVS','11',0);
+
+INSERT INTO `rent_date` (`license_plate`,`start_date`,`end_date`) VALUES ('0123BKL','2026-05-01','2026-06-01');
+INSERT INTO `rent_date` (`license_plate`,`start_date`,`end_date`) VALUES ('2745RNV','2026-05-03','2026-05-29');
+INSERT INTO `rent_date` (`license_plate`,`start_date`,`end_date`) VALUES ('4501JZR','2026-05-05','2026-05-15');
+INSERT INTO `rent_date` (`license_plate`,`start_date`,`end_date`) VALUES ('9918KSD','2026-05-06','2026-06-05');

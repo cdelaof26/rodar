@@ -33,7 +33,7 @@ public class VehicleService {
         this.rentDateService = rentDateService;
     }
     
-    public void createVehicle(VehicleCreationDto v, Inventory i) {
+    public Vehicle createVehicle(VehicleCreationDto v) {
         if (v.getVehicleId() == null) {
             l.error("Missing vehicleId for new inventory entry");
             throw new MissingFieldException("vehicleId");
@@ -45,9 +45,9 @@ public class VehicleService {
             throw new VehicleAlreadyExistException(_v.getLicensePlate());
         }
         
-        _v.setInventory(i);
-        vehicleRepository.save(_v);
+        _v = vehicleRepository.save(_v);
         l.debug("Vehicle created successfully");
+        return _v;
     }
     
     private void validateDate(String d, String name) {
@@ -66,7 +66,7 @@ public class VehicleService {
     
     public String updateVehicle(VehicleUpdateDto v, Inventory i) {
         if (!v.isInUse()) {
-            l.error("Update vehicle inUse flag is set to false: RETURN VEHICLE OPERATION IS UNSUPPORTED");
+            l.error("Update vehicle inUse flag is set to false: OPERATION RETURN LENT VEHICLE IS UNSUPPORTED");
             throw new UnsupportedException();
         }
         
