@@ -19,6 +19,7 @@ class Búsqueda {
 }
 
 class Vehículo {
+  placa
   modelo
   marca
   disponible

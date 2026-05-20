@@ -90,7 +90,11 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 
 <pre>
     GET /currencies/{c}/rates?to=&amount=&location=
+        Realiza la conversión de una divisa a otra
+        - Casos de uso: 1, 2
+
     GET /vehicle/rate/{vehicleId}?location=
+        Se eliminó este endpoint a favor de la utilización del anterior
 </pre>
 </details>
 
@@ -117,6 +121,8 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 
 
 ## Historial de cambios
+
+### v0.0.6 Microservicio ```tmicro```
 
 ### v0.0.5-1 Datos de prueba para ```pmmicro``` y ```vimicro```
 - En ```vimicro``` ahora la base de datos se encarga de la creación 

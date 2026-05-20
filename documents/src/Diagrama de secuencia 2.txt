@@ -29,6 +29,12 @@ box "Vehicles inventory microservice" #F0F0F0
   participant "__:InventoryRepository__" as virepo
 end box
 
+box "Provider management microservice" #F0F0F0
+  participant "__:ProvidersController__" as pmmicro
+  participant "__:ProvidersService__" as pmserv
+  participant "__:ProvidersRepository__" as pmrepo
+end box
+
 box "Taxes microservice" #F0F0F0
   participant "__:TaxesController__" as tmicro
   participant "__:TaxesService__" as tserv
@@ -103,9 +109,21 @@ vimicro -> viserv : getVehicleAvailableAmountByDate(...): ResponseEntity<Integer
 viserv -> virepo : findVehicleAvailableAmountBy...(...): Optional<Integer>
 reserv -> reserv : [available > 1] := isVehicleAvailable
 
-reserv -> tmicro : GET /vehicle/rate/{vehicleId}?location=
-tmicro -> tserv : getVehiclePricing(vehicleId: int): ResponseEntity<Price>
-tserv -> trepo : pricing := getPricingByVehicle(vehicleId: int): Price
+note right of reserv
+  //Para el vehículo se busca la divisa//
+end note
+reserv -> pmmicro : GET /providers/{providerId}
+pmmicro -> pmserv : getProvider(providerId: int): ResponseEntity<Provider>
+pmserv -> pmrepo : findProviderById(id: int): Optional<Provider>
+
+note right of reserv
+  //Para el vehículo se convierte la divisa C1 (proveedor) a C2 (usuario)//
+end note
+reserv -> tmicro : GET /currencies/{C1}/rates?to={C2}&amount={A}&location=
+tmicro -> tserv : getPricing(...): ResponseEntity<Price>
+tserv -> trepo : C1 := findCurrencyByName(name: str): Optional<Currency>
+tserv -> trepo : C2 := findCurrencyByName(name: str): Optional<Currency>
+tserv -> tserv : pricing := convertCurrency(C1: Currency, C2: Currency, A: int): Price
 tserv -> tserv : pricing := addTaxes(pricing: Price, location): Price
 
 reserv -> reserv : computeTotal(vehicleRate, days)

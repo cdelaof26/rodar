@@ -9,9 +9,9 @@
             <relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>es.upm.cdelaof26</groupId>
-	<artifactId>vimicro</artifactId>
-	<version>0.0.2-1</version>
-	<name>vimicro</name>
+	<artifactId>tmicro</artifactId>
+	<version>0.0.1</version>
+	<name>tmicro</name>
 	<description/>
 	<url/>
 	<licenses>
@@ -130,4 +130,5 @@
                         </plugin>
 		</plugins>
 	</build>
+
 </project>
