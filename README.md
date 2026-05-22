@@ -12,9 +12,10 @@ algunas limitaciones en el alcance.
 Para simplificar el desarrollo, 
 * No se implementan API Gateway, MessageBroker, réplicas ni balanceadores de carga
 * El front-end provider se unifica con el UI
-* Los microservicios de impuestos, pagos y notificaciones serán tratados como componentes simulados que siempre tendrán respuestas fijas _favorables_
+* Los microservicios de impuestos/pagos ~~y notificaciones~~ serán tratados como componentes simulados que siempre tendrán respuestas fijas _favorables_
 * Todas las bases de datos serán SQL
 * Solo se implementa el flujo básico como se detalla en los diagramas de secuencia
+* No se implementa nada relacionado con la geolocalización
 
 ## Documentos
 
@@ -33,7 +34,13 @@ La información necesaria para poner en marcha ```rodar```, se encuentrá en el 
 ## Microservicios y endpoints
 
 <details>
-    <summary><b>Provider management microservice (pmmicro)</b></summary>
+    <summary><b>Provider management microservice (pmmicro) since v0.0.2</b></summary>
+
+#### Dependencias
+
+- N/A
+
+#### Endpoints
 
 <pre>
     POST /providers
@@ -50,12 +57,26 @@ La información necesaria para poner en marcha ```rodar```, se encuentrá en el 
 
 
 <details>
-    <summary><b>Vehicles search microservice (vsmicro)</b></summary>
+    <summary><b>Vehicles search microservice (vsmicro) since v0.0.9</b></summary>
+
+#### Dependencias
+
+- [x] pmmicro
+- [x] vimicro
+- [x] tmicro
+
+#### Endpoints
 
 <pre>
-    POST /vehicles
+    ~~POST /vehicles~~
+
     GET  /vehicles?location=&startDate=&endDate=&types=&prices=&currency=
+        Obtiene una lista de vehículos dados ciertos parámetros de busqueda
+        - Caso de uso: 1
+
     GET  /vehicles/{vehicleId}
+        Obtiene los detalles de un vehículo en particular
+        - Caso de uso: 2
 </pre>
 
 <b>Nota</b>: la operación POST corresponde al endpoint privado que accede 
@@ -65,18 +86,25 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 
 
 <details>
-    <summary><b>Vehicles inventory microservice (vimicro)</b></summary>
+    <summary><b>Vehicles inventory microservice (vimicro) since v0.0.4</b></summary>
+
+#### Dependencias
+
+- N/A
+
+#### Endpoints
 
 <pre>
     POST /vehicles
         Puede crear una nueva entrada de inventario y registra las placas de un vehículo
 
-    GET  /vehicles  # Testing
-        Obtiene todos los inventarios
+    GET  /vehicles?startDate=&endDate=
+        Obtiene todos los vehículos disponibles dado un rango de fechas
+        - Casos de uso: 1
 
-    GET  /vehicles/{vehicleId}?startDate=&endDate=
-        Obtiene la cantidad de vehículos disponibles en un inventario dado un rango de fechas
-        - Casos de uso: 1, 2
+    GET  /vehicles/{vehicleId}
+        Obtiene los datos de disponibilidad un vehículo
+        - Casos de uso: 2
 
     PUT  /vehicles/{vehicleId}
         Actualiza el estado 'in_use' y/o agrega fechas/usuario a un vehículo
@@ -86,7 +114,13 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 
 
 <details>
-    <summary><b>Taxes microservice (tmicro)</b></summary>
+    <summary><b>Taxes microservice (tmicro) since v0.0.6</b></summary>
+
+#### Dependencias
+
+- N/A
+
+#### Endpoints
 
 <pre>
     GET /currencies/{c}/rates?to=&amount=&location=
@@ -102,6 +136,16 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 <details>
     <summary><b>Reservation microservice (remicro)</b></summary>
 
+#### Dependencias
+
+- [x] pmmicro
+- [x] vimicro
+- [x] tmicro
+- [ ] pmicro (UC3)
+- [x] vsmicro
+
+#### Endpoints
+
 <pre>
     POST /reservations
     GET  /reservations/{reservationId}
@@ -111,6 +155,14 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 
 <details>
     <summary><b>Payments microservice (pmicro)</b></summary>
+
+#### Dependencias
+
+- [x] vimicro
+- [ ] remicro (UC4)
+- [ ] ~~nmicro~~
+
+#### Endpoints
 
 <pre>
     POST /payments
@@ -122,6 +174,18 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 
 ## Historial de cambios
 
+### v0.0.9 Microservicio ```vsmicro```
+- **TODO**: Add pagination params and navigability links across all microservices
+
+### v0.0.8 Logging y actualización de lógica
+- Se eliminaron los ficheros de log4j.properties
+- Se agrega variable de entorno para configurar el nivel de logging de los servicios
+- Se cambia la lógica de búsqueda del caso de uso 1:
+  Ahora se consultan primero los vehículos con disponibilidad y luego se 
+  obtienen sus datos.
+
+### v0.0.7 Microservicio ```vsmicro```
+
 ### v0.0.6 Microservicio ```tmicro```
 
 ### v0.0.5-1 Datos de prueba para ```pmmicro``` y ```vimicro```
@@ -129,11 +193,10 @@ entradas. Por simplificar la implementación, se utiliza directamente.
   del inventario cuando se intenta insertar un nuevo vehículo y este no existe
 
 ### v0.0.5 Implementación faltante del microservicio ```vimicro```
-- **TODO**: Testing
 - ~~**TODO**: Add sample records in the db~~
 
 ### v0.0.3-1 Implementación faltante del microservicio ```pmmicro```
-- **TODO**: Testing
+- **TODO**: Testing across all microservices
 
 ### v0.0.2 Microservicio ```pmmicro```
 - Creación del ```docker-compose.yml```

@@ -58,18 +58,21 @@ ui -> api : GET /vehicles?location=&startDate=&endDate=&types=&prices=&currency=
 
 api -> vsmicro : GET /vehicles?location=&startDate=&endDate=&types=&prices=&currency=
 vsmicro -> vsserv : getVehicles(...): ResponseEntity<PagedModel<Vehicle>>
-vsserv -> vsrepo : vehicles := findVehiclesBy...(): Page<Vehicle>
 
 
 note right of vsserv
-  //Para cada vehículo se filtra por disponibilidad//
+  //Se buscan los vehículos por disponibilidad//
 end note
-vsserv -> vimicro : * [i=1..N] := GET /vehicles/{vehicleId}?startDate=&endDate=
-vimicro -> viserv : getVehicleAvailableAmount(...): ResponseEntity<Integer>
-viserv -> virepo : findVehicleAvailableAmountBy...(...): Optional<Integer>
+vsserv -> vimicro : GET /vehicles?startDate=&endDate=
+vimicro -> viserv : getAllAvailableVehicles(...): ResponseEntity<List<Inventory>>
+viserv -> virepo : findVehicleAvailableAmountBy...(...): Optional<List<Inventory>>
 
+note right of vsserv
+  //Una vez encontrados los que tienen disponibilidad, //
+  //obtiene toda la información de la base de datos de cada uno//
+end note
+vsserv -> vsrepo : vehicles := findVehiclesBy...(): Page<Vehicle>
 
-vsserv -> vsserv : vehicles := filterAvailable(...)
 note right of vsserv
   //Para cada vehículo se busca la divisa//
 end note

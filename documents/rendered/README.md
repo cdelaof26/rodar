@@ -18,6 +18,8 @@ En la arquitectura se observan diferentes elementos,
 más pequeños:
   * Balanceador de carga
 
+**TODO**: Podría ser bueno agregar conexiones faltantes entre microservicios
+
 
 # JSON
 

@@ -15,6 +15,10 @@ microservicios de Rodar.
     * ```tmicro``` es el microservicio para el cálculo de precios y cambios de divisa.
     * Puerto expuesto: 8082
 
+* Vehicle search microservice
+    * ```vsmicro``` es el microservicio para la búsqueda de vehículos.
+    * Puerto expuesto: 8083
+
 # Requisitos y configuración
 
 Para el levantamiento del sistema, o de microservicios individuales, se require de Docker.

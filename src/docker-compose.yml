@@ -26,19 +26,6 @@ x-micro-common: &micro-common
 
 
 services:
-  pmmicro-db:
-    <<: *db-common
-    environment: 
-      <<: *db-common-env
-      MARIADB_DATABASE: "pmdb"
-
-    container_name: pmmicro-db
-    volumes:
-      - pmmicro-db-data:/var/lib/mysql
-      - ./pmmicro/db:/docker-entrypoint-initdb.d
-    networks:
-      - pmmicro-net
-
   pmmicro:
     <<: *micro-common
     environment:
@@ -56,6 +43,20 @@ services:
     depends_on:
       pmmicro-db:
         condition: service_healthy
+    networks:
+      - pmmicro-net
+      - internal
+
+  pmmicro-db:
+    <<: *db-common
+    environment: 
+      <<: *db-common-env
+      MARIADB_DATABASE: "pmdb"
+
+    container_name: pmmicro-db
+    volumes:
+      - pmmicro-db-data:/var/lib/mysql
+      - ./pmmicro/db:/docker-entrypoint-initdb.d
     networks:
       - pmmicro-net
 
@@ -79,6 +80,7 @@ services:
         condition: service_healthy
     networks:
       - vimicro-net
+      - internal
 
   vimicro-db:
     <<: *db-common
@@ -91,7 +93,7 @@ services:
       - vimicro-db-data:/var/lib/mysql
       - ./vimicro/db:/docker-entrypoint-initdb.d
     networks:
-      - vimicro-net    
+      - vimicro-net
 
 
   tmicro:
@@ -106,12 +108,62 @@ services:
       - 8082:8080
     networks:
       - tmicro-net
+      - internal
+
+
+  vsmicro:
+    <<: *micro-common
+    environment:
+      <<: *micro-common-env
+      SPRING_DATASOURCE_URL: jdbc:mariadb://vsmicro-db:3306/vsdb?useSSL=false&serverTimezone=UTC
+      PMMICRO_BASE_URL: http://pmmicro:8080/api/v1
+      VIMICRO_BASE_URL: http://vimicro:8080/api/v1
+      TMICRO_BASE_URL: http://tmicro:8080/api/v1
+      
+    container_name: vsmicro
+    build: 
+      <<: *micro-common-build
+      context: vsmicro
+      args:
+        ARTIFACT: vsmicro-0.0.1.jar
+    ports:
+      - 8083:8080
+    depends_on:
+      vsmicro-db:
+        condition: service_healthy
+      pmmicro:
+        condition: service_started
+      vimicro:
+        condition: service_started
+      tmicro:
+        condition: service_started
+
+    networks:
+      - vsmicro-net
+      - internal
+
+  vsmicro-db:
+    <<: *db-common
+    environment:
+      <<: *db-common-env
+      MARIADB_DATABASE: "vsdb"
+
+    container_name: vsmicro-db
+    volumes:
+      - vsmicro-db-data:/var/lib/mysql
+      - ./vsmicro/db:/docker-entrypoint-initdb.d
+    networks:
+      - vsmicro-net
 
 volumes:
   pmmicro-db-data: {}
   vimicro-db-data: {}
+  vsmicro-db-data: {}
 
 networks:
+  internal:
+    driver: bridge
+
   pmmicro-net:
     driver: bridge
 
@@ -119,4 +171,7 @@ networks:
     driver: bridge
 
   tmicro-net:
+    driver: bridge
+
+  vsmicro-net:
     driver: bridge
