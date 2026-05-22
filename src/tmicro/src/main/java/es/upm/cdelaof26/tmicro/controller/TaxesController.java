@@ -29,10 +29,10 @@ public class TaxesController {
     @GetMapping("/currencies/{c}/rates")
     public ResponseEntity<PriceDto> getPricingPerDay(
         @PathVariable String c, @RequestParam String to, @RequestParam float amount,
-        @RequestParam(required = false) boolean addTaxes
+        @RequestParam(required = false) String location
     ) {
         l.debug(String.format("Convert %f %s to %s...", amount, c, to));
         
-        return ResponseEntity.ok(service.convertCurrency(c, to, amount, addTaxes));
+        return ResponseEntity.ok(service.convertCurrency(c, to, amount, location != null && !location.isEmpty()));
     }
 }

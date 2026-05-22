@@ -11,6 +11,10 @@ microservicios de Rodar.
     * ```vimicro``` es el microservicio para la gestión del inventario de vehículos.
     * Puerto expuesto: 8081
 
+* Taxes microservice
+    * ```tmicro``` es el microservicio para el cálculo de precios y cambios de divisa.
+    * Puerto expuesto: 8082
+
 # Requisitos y configuración
 
 Para el levantamiento del sistema, o de microservicios individuales, se require de Docker.
@@ -30,6 +34,14 @@ cada ```application-template.properties``` a ```application.properties```,
 ```bash
 chmod +x rename_props.sh
 ./rename_props.sh
+```
+
+#### Logging
+
+Se puede configurar al colocar la variable de entorno,
+
+```bash
+export LOGGING_LVL=[debug|info|error]
 ```
 
 # Ejecución de microservicios individuales

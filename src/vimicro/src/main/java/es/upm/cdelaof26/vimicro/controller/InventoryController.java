@@ -42,23 +42,20 @@ public class InventoryController {
     //       operations are performed involving all the repositories
     
     @GetMapping
-    public ResponseEntity<List<Inventory>> getAllInventories() {
-        l.debug("Listing all inventories...");
-        return ResponseEntity.ok(inventoryService.getAllInventories());
+    public ResponseEntity<List<Inventory>> getAllInventories(
+        @RequestParam String startDate, @RequestParam String endDate
+    ) {
+        l.debug("Listing all inventories available in dates,");
+        l.debug("startDate = " + startDate);
+        l.debug("endDate = " + endDate);
+        
+        return ResponseEntity.ok(vehicleService.findAllAvailable(startDate, endDate));
     }
     
     @GetMapping("/{vehicleId}")
-    public ResponseEntity<Integer> getVehicleAvailableAmount(
-        @PathVariable int vehicleId, @RequestParam String startDate, @RequestParam String endDate
-    ) {
+    public ResponseEntity<Inventory> getVehicleAvailableAmount(@PathVariable int vehicleId) {
         l.debug(String.format("Listing available vehicles with id %d...", vehicleId));
-        
-        // Aunque el valor necesario en findAllAvailable es vehicleId, 
-        // se busca en inventario (getInventoryById) para validar que exista.
-        //
-        Inventory i = inventoryService.getInventoryById(vehicleId);
-        
-        return ResponseEntity.ok(vehicleService.findAllAvailable(i, startDate, endDate));
+        return ResponseEntity.ok(inventoryService.getInventoryById(vehicleId));
     }
     
     @PostMapping
