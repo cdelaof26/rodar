@@ -23,8 +23,10 @@ más pequeños:
 
 # JSON
 
+**TODO**: Actualizar JSON
+
 <pre>
-    Provider
+    Provider [outdated]
 {
   "providerId": number,
   "companyName": string,
@@ -36,7 +38,7 @@ más pequeños:
 
 
 <pre>
-    Users
+    Users [unused]
 {
   "userId": number,
   "name": string,
@@ -47,7 +49,7 @@ más pequeños:
 
 
 <pre>
-    Vehicle
+    Vehicle [outdated]
 {
   "vehicleId": number,
   "brand": string,

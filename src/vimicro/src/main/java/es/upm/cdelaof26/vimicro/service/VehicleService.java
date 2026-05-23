@@ -6,7 +6,6 @@ import es.upm.cdelaof26.vimicro.exception.InvalidDateException;
 import es.upm.cdelaof26.vimicro.exception.MissingFieldException;
 import es.upm.cdelaof26.vimicro.exception.NoAvailableVehiclesException;
 import es.upm.cdelaof26.vimicro.exception.VehicleAlreadyExistException;
-import es.upm.cdelaof26.vimicro.exception.UnsupportedException;
 import es.upm.cdelaof26.vimicro.mapper.VehicleMapper;
 import es.upm.cdelaof26.vimicro.model.Inventory;
 import es.upm.cdelaof26.vimicro.model.Vehicle;
@@ -66,10 +65,11 @@ public class VehicleService {
     }
     
     public String updateVehicle(VehicleUpdateDto v, Inventory i) {
-        if (!v.isInUse()) {
-            l.error("Update vehicle inUse flag is set to false: OPERATION RETURN LENT VEHICLE IS UNSUPPORTED");
-            throw new UnsupportedException();
-        }
+        // TODO: Review logic for returns. Even if not needed?
+//        if (!v.isInUse()) {
+//            l.error("Update vehicle inUse flag is set to false: OPERATION RETURN LENT VEHICLE IS UNSUPPORTED");
+//            throw new UnsupportedException();
+//        }
         
         if (i.getAmount() == 0) {
             l.error(String.format("No vehicles found for update in inventory %d", i.getId()));
@@ -92,6 +92,13 @@ public class VehicleService {
         Vehicle _v = vehicleRepository.findById(licensePlate).get();
         
         _v.setInUse(v.isInUse());
+        
+        // Thinking about it, the userId should be part of RentDate instead 
+        // of the vehicle, because an specific vehicle will have several users
+        // depending on the date. Doing this (next line) effectively will 
+        // overwrite any previous user if the vehicle is available in the given
+        // date range. New TODO, I guess...
+        //
         _v.setUserId(v.getUserId());
         
         rentDateService.createRentDate(_v.getLicensePlate(), startDate, endDate);

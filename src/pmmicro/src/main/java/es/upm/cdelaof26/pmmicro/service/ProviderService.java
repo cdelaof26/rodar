@@ -60,6 +60,8 @@ public class ProviderService {
             throw new FieldAlreadyTakenException("número telefónico", p.getPhone());
         }
         
+        p.setId(null);
+        
         return repository.save(p);
     }
 }

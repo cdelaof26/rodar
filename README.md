@@ -141,38 +141,55 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 - [x] pmmicro
 - [x] vimicro
 - [x] tmicro
-- [ ] pmicro (UC3)
+- [ ] pmicro (UC2)
 - [x] vsmicro
 
 #### Endpoints
 
 <pre>
     POST /reservations
+        Crea una nueva reservación
+        - Casos de uso: 2 [Depende de pmicro]
+
     GET  /reservations/{reservationId}
+        - Casos de uso: 3
 </pre>
 </details>
 
 
 <details>
-    <summary><b>Payments microservice (pmicro)</b></summary>
+    <summary><b>Payments microservice (pmicro) since v0.1.0</b></summary>
 
 #### Dependencias
 
 - [x] vimicro
-- [ ] remicro (UC4)
+- [ ] remicro (UC3)
 - [ ] ~~nmicro~~
 
 #### Endpoints
 
 <pre>
+    GET  /payments  # Testing
+        Obtiene todos los pagos
+
     POST /payments
-    GET  /payments?status=
+        Crea un nuevo registro de pago
+        - Casos de uso: 2
+
+    GET  /payments?userId=&status=
+        Obtiene los registros de pagos de un usuario
+        - Casos de uso: 3 [Depende de remicro]
+
     PUT  /payments
+        Realiza la transacción del cobro y actualiza el estado de un pago
+        - Casos de uso: 3
 </pre>
 </details>
 
 
 ## Historial de cambios
+
+### v0.1.0 Microservicio ```pmicro```
 
 ### v0.0.9 Microservicio ```vsmicro```
 - **TODO**: Add pagination params and navigability links across all microservices

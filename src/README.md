@@ -19,6 +19,10 @@ microservicios de Rodar.
     * ```vsmicro``` es el microservicio para la búsqueda de vehículos.
     * Puerto expuesto: 8083
 
+* Payments microservice
+    * ```pmicro``` es el microservicio para realización de pagos.
+    * Puerto expuesto: 8084
+
 # Requisitos y configuración
 
 Para el levantamiento del sistema, o de microservicios individuales, se require de Docker.
@@ -36,6 +40,7 @@ para cada proyecto o ejecutar el script ```rename_props.sh``` que renombra
 cada ```application-template.properties``` a ```application.properties```,
 
 ```bash
+cd /path/to/rodar/src
 chmod +x rename_props.sh
 ./rename_props.sh
 ```
@@ -54,6 +59,8 @@ Los diferentes microservicios se pueden arrancar de forma individual a través d
 construcción de su imagen, por ejemplo con ```pmmicro```,
 
 ```bash
+cd /path/to/rodar/src
+
 # Build con docker
 docker build --build-arg ARTIFACT=pmmicro-0.0.2.jar \
     --tag src-pmmicro --file backend.Dockerfile pmmicro
@@ -75,6 +82,8 @@ La ejecución de un microservicio individual con ```docker compose``` se hace co
 siguiente comando,
 
 ```bash
+cd /path/to/rodar/src
+
 docker compose up --detach --build [nombre_del_micro]
 ```
 
@@ -84,6 +93,8 @@ La ejecución del sistema en su totalidad, incluida la construcción de las imag
 se realiza con ```docker compose``` de la siguiente forma,
 
 ```bash
+cd /path/to/rodar/src
+
 docker compose up --detach
 ```
 

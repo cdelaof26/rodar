@@ -39,8 +39,7 @@ if not pom_xml.exists():
 with open(pom_xml, "r") as f:
 	pom = f.read()
 
-prev_version = artifact[len(args.project) + 1:-4]
-prev_version = re.sub("[v]*", "", prev_version)
+prev_version = artifact[len(args.project) + 2:-4]  # +2 removes -v
 
 pom_artifact = re.findall(f"<version>{prev_version}</version>", pom)
 if not pom_artifact:

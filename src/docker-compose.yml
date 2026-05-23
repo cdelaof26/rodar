@@ -155,10 +155,50 @@ services:
     networks:
       - vsmicro-net
 
+
+  pmicro:
+    <<: *micro-common
+    environment:
+      <<: *micro-common-env
+      SPRING_DATASOURCE_URL: jdbc:mariadb://pmicro-db:3306/pdb?useSSL=false&serverTimezone=UTC
+      VIMICRO_BASE_URL: http://vimicro:8080/api/v1
+      
+    container_name: pmicro
+    build: 
+      <<: *micro-common-build
+      context: pmicro
+      args:
+        ARTIFACT: pmicro-0.0.1.jar
+    ports:
+      - 8084:8080
+    depends_on:
+      pmicro-db:
+        condition: service_healthy
+      vimicro:
+        condition: service_started
+      
+    networks:
+      - pmicro-net
+      - internal
+
+  pmicro-db:
+    <<: *db-common
+    environment:
+      <<: *db-common-env
+      MARIADB_DATABASE: "pdb"
+
+    container_name: pmicro-db
+    volumes:
+      - pmicro-db-data:/var/lib/mysql
+      - ./pmicro/db:/docker-entrypoint-initdb.d
+    networks:
+      - pmicro-net
+
 volumes:
   pmmicro-db-data: {}
   vimicro-db-data: {}
   vsmicro-db-data: {}
+  pmicro-db-data: {}
 
 networks:
   internal:
@@ -174,4 +214,7 @@ networks:
     driver: bridge
 
   vsmicro-net:
+    driver: bridge
+
+  pmicro-net:
     driver: bridge

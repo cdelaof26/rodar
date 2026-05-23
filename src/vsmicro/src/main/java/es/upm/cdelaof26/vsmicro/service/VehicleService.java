@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -103,6 +102,8 @@ public class VehicleService {
         }
     }
     
+    // TODO: Move restTemplate calls to another class
+    
     private List<InventoryDto> findVehiclesByDate(String startDate, String endDate) {
         URI uri = UriComponentsBuilder.fromUriString(VIMICRO_URL + "/vehicles")
             .queryParam("startDate", "{startDate}")
@@ -116,7 +117,7 @@ public class VehicleService {
         ResponseEntity<List<InventoryDto>> resp = restTemplate.exchange(
             uri,
             HttpMethod.GET,
-            new HttpEntity<>(new HttpHeaders()),
+            HttpEntity.EMPTY,
             typeRef
         );
         
@@ -132,7 +133,7 @@ public class VehicleService {
         ResponseEntity<ProviderDto> resp = restTemplate.exchange(
             uri,
             HttpMethod.GET,
-            new HttpEntity<>(new HttpHeaders()),
+            HttpEntity.EMPTY,
             ProviderDto.class
         );
         
@@ -159,7 +160,7 @@ public class VehicleService {
         ResponseEntity<PriceDto> resp = restTemplate.exchange(
             uri,
             HttpMethod.GET,
-            new HttpEntity<>(new HttpHeaders()),
+            HttpEntity.EMPTY,
             PriceDto.class
         );
         
