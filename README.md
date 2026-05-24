@@ -25,6 +25,8 @@ que pueden renderizarse con PlantUML y, además, los casos de uso.
 Por otra parte, en ```rendered```, se encuentra la arquitectura del sistema y 
 los diagramas anteriores en formato ```svg```.
 
+**Nota**: _Los diagramas de secuencia son ligeramente diferentes en algunos flujos a los entregados._
+
 ## Ejecución
 
 La información necesaria para poner en marcha ```rodar```, se encuentrá en el fichero
@@ -172,9 +174,6 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 #### Endpoints
 
 <pre>
-    GET  /payments  # Testing
-        Obtiene todos los pagos
-
     POST /payments
         Crea un nuevo registro de pago
         - Casos de uso: 2
@@ -192,8 +191,12 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 
 ## Historial de cambios
 
+### v0.1.2 Implementación faltante de los microservicios ```pmicro``` y ```remicro```
+- Se agregaron datos de prueba
+
 ### v0.1.1 Microservicio ```remicro```
 - **TODO**: Clean up
+    - Make clear the separation between input and output DTO
 
 ### v0.1.0 Microservicio ```pmicro```
 

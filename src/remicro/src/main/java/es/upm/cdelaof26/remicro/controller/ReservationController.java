@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,13 +37,19 @@ public class ReservationController {
         return ResponseEntity.ok(service.getAllReservations());
     }
     
+    @GetMapping("/{reservationId}")
+    public ResponseEntity<Reservation> getReservation(@PathVariable int reservationId) {
+        l.debug(String.format("Getting reservation '%d'...", reservationId));
+        return ResponseEntity.ok(service.findReservationById(reservationId));
+    }
+    
     @PostMapping
-    public ResponseEntity<Void> createReservation(@RequestBody @Valid ReservationDto p) {
+    public ResponseEntity<Void> createReservation(@RequestBody @Valid ReservationDto r) {
         l.debug("Creating a new reservation entry...");
         
-        Reservation _p = service.save(p);
+        Reservation _r = service.save(r);
         
         l.debug("Reservation entry created successfully");
-        return ResponseEntity.created(self.slash(_p.getId()).toUri()).build();
+        return ResponseEntity.created(self.slash(_r.getId()).toUri()).build();
     }
 }

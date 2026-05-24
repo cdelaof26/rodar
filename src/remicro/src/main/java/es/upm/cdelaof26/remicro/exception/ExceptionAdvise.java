@@ -26,7 +26,13 @@ public class ExceptionAdvise {
     
     @ExceptionHandler(NoInventoryException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorMessage paymentMethodUnsupportedHandler(NoInventoryException ex) {
+    public ErrorMessage noInventoryHandler(NoInventoryException ex) {
+        return new ErrorMessage(ex.getMessage());
+    }
+    
+    @ExceptionHandler(ReservationNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorMessage reservationNotFoundHandler(ReservationNotFoundException ex) {
         return new ErrorMessage(ex.getMessage());
     }
 }

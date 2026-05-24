@@ -168,7 +168,7 @@ services:
       <<: *micro-common-build
       context: pmicro
       args:
-        ARTIFACT: pmicro-0.0.1.jar
+        ARTIFACT: pmicro-0.0.2.jar
     ports:
       - 8084:8080
     depends_on:
@@ -211,7 +211,7 @@ services:
       <<: *micro-common-build
       context: remicro
       args:
-        ARTIFACT: remicro-0.0.1.jar
+        ARTIFACT: remicro-0.0.2.jar
     ports:
       - 8085:8080
     depends_on:

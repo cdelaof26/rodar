@@ -9,6 +9,7 @@ import es.upm.cdelaof26.remicro.dto.VehicleDto;
 import es.upm.cdelaof26.remicro.exception.InvalidDateException;
 import es.upm.cdelaof26.remicro.exception.LendTimeTooLongException;
 import es.upm.cdelaof26.remicro.exception.NoInventoryException;
+import es.upm.cdelaof26.remicro.exception.ReservationNotFoundException;
 import es.upm.cdelaof26.remicro.mapper.ReservationMapper;
 import es.upm.cdelaof26.remicro.model.Reservation;
 import org.slf4j.Logger;
@@ -61,6 +62,15 @@ public class ReservationService {
     
     public List<Reservation> getAllReservations() {
         return repository.findAll();
+    }
+    
+    public Reservation findReservationById(int id) {
+        if (!repository.existsById(id)) {
+            l.error(String.format("Reservation '%d' not found", id));
+            throw new ReservationNotFoundException(id);
+        }
+        
+        return repository.findById(id).get();
     }
     
     private void validateDate(String d, String name) {

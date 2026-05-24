@@ -1,9 +1,12 @@
 package es.upm.cdelaof26.pmicro.service;
 
-import es.upm.cdelaof26.pmicro.dto.PaymentDto;
+import es.upm.cdelaof26.pmicro.dto.PaymentInDto;
+import es.upm.cdelaof26.pmicro.dto.PaymentOutDto;
+import es.upm.cdelaof26.pmicro.dto.ReservationDto;
 import es.upm.cdelaof26.pmicro.dto.VehicleUpdateDto;
 import es.upm.cdelaof26.pmicro.exception.FieldAlreadyTakenException;
 import es.upm.cdelaof26.pmicro.exception.InvalidDateException;
+import es.upm.cdelaof26.pmicro.exception.InvalidStatusException;
 import es.upm.cdelaof26.pmicro.exception.MissingVehicleIdException;
 import es.upm.cdelaof26.pmicro.exception.PaymentMethodUnsupportedException;
 import es.upm.cdelaof26.pmicro.exception.PaymentNotFoundException;
@@ -18,9 +21,11 @@ import es.upm.cdelaof26.pmicro.repository.StatusRepository;
 import java.net.URI;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -44,6 +49,7 @@ public class PaymentService {
     
     private final RestTemplate restTemplate;
     private final String VIMICRO_URL;
+    private final String REMICRO_URL;
 
     public PaymentService(
         Environment environment, RestTemplate restTemplate, 
@@ -51,6 +57,7 @@ public class PaymentService {
         PaymentMethodRepository paymentMethodRepository
     ) {
         this.VIMICRO_URL = environment.getProperty("vimicro.base-url");
+        this.REMICRO_URL = environment.getProperty("remicro.base-url");
         this.restTemplate = restTemplate;
         
         this.paymentRepository = paymentRepository;
@@ -58,11 +65,7 @@ public class PaymentService {
         this.paymentMethodRepository = paymentMethodRepository;
     }
     
-    public List<Payment> getAllPayments() {
-        return paymentRepository.findAll();
-    }
-    
-    public Payment save(PaymentDto p) {
+    public Payment save(PaymentInDto p) {
         if (paymentRepository.existsByReservationId(p.getReservationId())) {
             l.error(String.format("ReservationId '%d' is already taken", p.getReservationId()));
             throw new FieldAlreadyTakenException("identificador de reservación", p.getReservationId().toString());
@@ -134,7 +137,7 @@ public class PaymentService {
         }
     }
     
-    public void validateParameterCombination(PaymentDto p) {
+    public void validateParameterCombination(PaymentInDto p) {
         // This assumes that both dates must be present with a payment method
         // and a vehicle id for this to work. But it's totally posible that 
         // someone might want to update any of these parameters...
@@ -155,7 +158,7 @@ public class PaymentService {
         }
     }
     
-    public Payment performingPayment(int paymentId, PaymentDto p) {
+    public Payment performingPayment(int paymentId, PaymentInDto p) {
         if (!paymentRepository.existsById(paymentId)) {
             l.error(String.format("Payment not found by id %d", paymentId));
             throw new PaymentNotFoundException(paymentId);
@@ -175,5 +178,43 @@ public class PaymentService {
         _p.setId(paymentId);
         
         return paymentRepository.save(_p);
+    }
+    
+    private ReservationDto getReservation(int reservationId) {
+        URI uri = UriComponentsBuilder.fromUriString(REMICRO_URL + "/reservations")
+            .path("/{reservationId}")
+            .buildAndExpand(Map.of(
+                "reservationId", reservationId
+            ))
+            .toUri();
+        
+        ResponseEntity<ReservationDto> resp = restTemplate.exchange(
+            uri,
+            HttpMethod.GET,
+            HttpEntity.EMPTY,
+            ReservationDto.class
+        );
+        
+        return resp.getBody();
+    }
+    
+    public List<PaymentOutDto> getAllPayments(int userId, String status) {
+        if (!statusRepository.existsByName(status)) {
+            l.error(String.format("Found invalid status '%s'", status));
+            throw new InvalidStatusException(status);
+        }
+        
+        // TODO: There's probably a better way to do this
+        
+        List<PaymentOutDto> payments = new ArrayList<>();
+        
+        paymentRepository.findAllByUserIdAndStatus(
+            userId, statusRepository.findByName(status).get()
+        ).forEach(p -> payments.add(mapper.toPaymentOutDto(p)));
+        
+        for (PaymentOutDto payment : payments)
+            payment.setReservation(getReservation(payment.getReservationId()));
+        
+        return payments;
     }
 }

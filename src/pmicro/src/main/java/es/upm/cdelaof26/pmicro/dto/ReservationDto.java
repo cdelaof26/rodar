@@ -1,4 +1,4 @@
-package es.upm.cdelaof26.remicro.dto;
+package es.upm.cdelaof26.pmicro.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,12 +31,11 @@ public class ReservationDto {
     
     public ReservationDto() { }
 
-    public ReservationDto(Integer vehicleId, Integer userId, String startDate, String endDate, String currency, String location) {
+    public ReservationDto(Integer providerId, Integer vehicleId, Integer userId, String startDate, String endDate, String location) {
         this.vehicleId = vehicleId;
         this.userId = userId;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.currency = currency;
         this.location = location;
     }
 
@@ -79,7 +78,7 @@ public class ReservationDto {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
-
+    
     public String getLocation() {
         return location;
     }

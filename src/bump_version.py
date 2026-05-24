@@ -11,8 +11,10 @@ def non_empty_str(value: str) -> str:
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-p", "--project", required=True, type=non_empty_str)
-parser.add_argument("-v", "--version", required=True, type=non_empty_str)
+parser.add_argument("-p", "--project", required=True, type=non_empty_str, 
+	help="Name of micro")
+parser.add_argument("-v", "--version", type=non_empty_str,
+	help="Set the version of the micro (--project) to a designed one")
 
 args = parser.parse_args()
 
@@ -46,6 +48,10 @@ pom_artifact = re.findall(f"<version>{prev_version}</version>", pom)
 if not pom_artifact:
 	print(f"Project {args.project} version {prev_version} not found in pom")
 	sys.exit(1)
+
+if args.version is None:
+	print(args.project, prev_version)
+	sys.exit(0)
 
 pom_artifact = pom_artifact[0]
 new_pom_artifact = f"<version>{args.version}</version>"

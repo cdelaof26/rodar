@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `pdb`.`payment` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `reservation_id` INT NOT NULL,
   `user_id` INT NOT NULL,
-  `amount` DECIMAL(5,2) NOT NULL,
+  `amount` DECIMAL(10,2) NOT NULL,
   `payment_method_id` INT NULL,
   `status` INT NOT NULL,
   PRIMARY KEY (`id`),

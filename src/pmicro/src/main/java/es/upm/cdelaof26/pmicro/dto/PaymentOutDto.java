@@ -2,14 +2,13 @@ package es.upm.cdelaof26.pmicro.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * Payment DTO model
  * @author cristopher
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PaymentDto {
+public class PaymentOutDto {
     @Schema(description = "Identificador de la reservación asociada", requiredMode = Schema.RequiredMode.REQUIRED)
     private int reservationId;
     
@@ -25,47 +24,37 @@ public class PaymentDto {
     @Schema(description = "Estado del pago", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String status;
     
-    @Schema(description = "Identificador del vehículo", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Integer vehicleId;
-    
-    @DateTimeFormat(pattern = "yyyy-mm-dd")
-    @Schema(description = "Fecha de inicio del alquiler", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String startDate;
-    
-    @DateTimeFormat(pattern = "yyyy-mm-dd")
-    @Schema(description = "Fecha de inicio del alquiler", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private String endDate;
+    @Schema(description = "Reservación completa asociada", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private ReservationDto reservation;
     
     
-    public PaymentDto() { }
+    public PaymentOutDto() { }
 
-    public PaymentDto(
+    public PaymentOutDto(
         int reservationId, int userId, float amount, String paymentMethod, 
-        String status, Integer vehicleId, String startDate, String endDate
+        String status, ReservationDto reservation
     ) {
         this.reservationId = reservationId;
         this.userId = userId;
         this.amount = amount;
         this.paymentMethod = paymentMethod;
         this.status = status;
-        this.vehicleId = vehicleId;
-        this.startDate = startDate;
-        this.endDate = endDate;
+        this.reservation = reservation;
     }
 
-    public Integer getReservationId() {
+    public int getReservationId() {
         return reservationId;
     }
 
-    public void setReservationId(Integer reservationId) {
+    public void setReservationId(int reservationId) {
         this.reservationId = reservationId;
     }
 
-    public Integer getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
@@ -89,27 +78,15 @@ public class PaymentDto {
         return status;
     }
 
-    public Integer getVehicleId() {
-        return vehicleId;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public void setVehicleId(int vehicleId) {
-        this.vehicleId = vehicleId;
-    }
-    
-    public String getStartDate() {
-        return startDate;
+    public ReservationDto getReservation() {
+        return reservation;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public void setReservation(ReservationDto reservation) {
+        this.reservation = reservation;
     }
 }

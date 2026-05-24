@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StatusRepository extends JpaRepository<Status, Integer> {
     public Optional<Status> findByName(String name);
+    
+    public boolean existsByName(String name);
 }

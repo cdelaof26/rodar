@@ -1,6 +1,7 @@
 package es.upm.cdelaof26.pmicro.controller;
 
-import es.upm.cdelaof26.pmicro.dto.PaymentDto;
+import es.upm.cdelaof26.pmicro.dto.PaymentInDto;
+import es.upm.cdelaof26.pmicro.dto.PaymentOutDto;
 import es.upm.cdelaof26.pmicro.service.PaymentService;
 import es.upm.cdelaof26.pmicro.model.Payment;
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -34,12 +36,15 @@ public class PaymentController {
     }
     
     @GetMapping
-    public ResponseEntity<List<Payment>> getAllPayments() {
-        return ResponseEntity.ok(service.getAllPayments());
+    public ResponseEntity<List<PaymentOutDto>> getAllPayments(
+        @RequestParam int userId, @RequestParam String status
+    ) {
+        l.debug(String.format("Listing all payments with status '%s' for user '%d'", status, userId));
+        return ResponseEntity.ok(service.getAllPayments(userId, status));
     }
     
     @PostMapping
-    public ResponseEntity<Void> createPayment(@RequestBody @Valid PaymentDto p) {
+    public ResponseEntity<Void> createPayment(@RequestBody @Valid PaymentInDto p) {
         l.debug("Creating a new payment entry...");
         
         Payment _p = service.save(p);
@@ -50,7 +55,7 @@ public class PaymentController {
     
     @PutMapping("/{paymentId}")
     public ResponseEntity<Void> updatePayment(
-        @PathVariable int paymentId, @RequestBody @Valid PaymentDto p
+        @PathVariable int paymentId, @RequestBody @Valid PaymentInDto p
     ) {
         l.debug("Performing update to payment...");
         service.validateParameterCombination(p);

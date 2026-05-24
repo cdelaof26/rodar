@@ -8,7 +8,7 @@ import es.upm.cdelaof26.remicro.model.Reservation;
  * @author cristopher
  */
 public class ReservationMapper {
-    public Reservation toReservation(ReservationDto p) {
-        return new Reservation(null, p.getVehicleId(), p.getUserId(), null, null, p.getLocation());
+    public Reservation toReservation(ReservationDto r) {
+        return new Reservation(null, r.getVehicleId(), r.getUserId(), null, null, r.getLocation());
     }
 }
