@@ -124,6 +124,7 @@ public class PaymentService {
         l.info(String.format("Updating availability for vehicleId=%d...", vehicleId));
         String licensePlate = updateVehicleAvailability(vehicleId, startDate, endDate, p);
         l.info(String.format("Notifying user of their plates: %s", licensePlate));
+        // TODO: Probably is better to have the plates in the reservation
     }
     
     private void validateDate(String d, String name) {

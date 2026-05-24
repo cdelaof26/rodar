@@ -24,16 +24,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, String> {
     
     // TODO: Use a more portable solution across different DB...
     //
-    @NativeQuery(value = "SELECT v.inventory_id AS id, count(v.license_plate) AS amount "
-            + "FROM vehicle v LEFT JOIN rent_date rd ON v.license_plate = rd.license_plate "
-            + "WHERE rd.id IS NULL OR NOT "
-            + "(rd.start_date <= ?1 AND rd.end_date >= ?2 AND "
-            + "rd.start_date >= ?1 AND rd.end_date <= ?2 AND "
-            + "rd.start_date <= ?1 AND rd.end_date <= ?2 AND "
-            + "rd.start_date >= ?1 AND rd.end_date >= ?2)"
-            + "GROUP BY v.inventory_id;")
-    public List<Inventory> findAmountAvailable(Date startDate, Date endDate);
-    
     @NativeQuery(value = "SELECT v.license_plate "
             + "FROM vehicle v LEFT JOIN rent_date rd ON v.license_plate = rd.license_plate "
             + "WHERE v.in_use = 0 AND v.inventory_id = ?1 AND "

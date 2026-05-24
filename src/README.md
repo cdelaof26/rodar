@@ -23,6 +23,10 @@ microservicios de Rodar.
     * ```pmicro``` es el microservicio para realización de pagos.
     * Puerto expuesto: 8084
 
+* Reservation microservice
+    * ```remicro``` es el microservicio para realización de reservaciones.
+    * Puerto expuesto: 8085
+
 # Requisitos y configuración
 
 Para el levantamiento del sistema, o de microservicios individuales, se require de Docker.
@@ -103,7 +107,7 @@ docker compose up --detach
 Para cada microservicio, se puede acceder a Swagger a través de la URL,
 
 ```
-http://container-ip:exposed-port/api/v1/swagger-ui/index.html
+http://container-ip:port-exposed/api/v1/swagger-ui/index.html
 ```
 
 # SonarQube

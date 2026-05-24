@@ -19,7 +19,7 @@ public class VehicleUpdateDto extends RepresentationModel<VehicleUpdateDto> {
     private String startDate;
     
     @DateTimeFormat(pattern = "yyyy-mm-dd")
-    @Schema(description = "Fecha de inicio del alquiler", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Fecha de fin del alquiler", requiredMode = Schema.RequiredMode.REQUIRED)
     private String endDate;
     
     @Schema(description = "Identificador del usuario", pattern = "\\d+", requiredMode = Schema.RequiredMode.REQUIRED)

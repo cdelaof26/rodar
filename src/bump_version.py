@@ -39,7 +39,8 @@ if not pom_xml.exists():
 with open(pom_xml, "r") as f:
 	pom = f.read()
 
-prev_version = artifact[len(args.project) + 2:-4]  # +2 removes -v
+prev_version = artifact[len(args.project):-4]
+prev_version = prev_version.strip("-").strip("v")
 
 pom_artifact = re.findall(f"<version>{prev_version}</version>", pom)
 if not pom_artifact:
@@ -52,7 +53,7 @@ new_artifact = f"{args.project}-{args.version}.jar"
 
 print(args.project)
 print(pom_artifact, "->", new_pom_artifact)
-print(artifact, "->", new_artifact)
+print(artifact.ljust(len(pom_artifact), " "), "->", new_artifact)
 
 with open("docker-compose.yml", "w") as f:
 	f.write(compose.replace(artifact, new_artifact))

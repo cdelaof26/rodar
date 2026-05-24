@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import es.upm.cdelaof26.vimicro.repository.InventoryRepository;
+import java.sql.Date;
 
 /**
  * Vehicle service
@@ -34,5 +35,19 @@ public class InventoryService {
         }
         
         return repository.findById(inventoryId).get();
+    }
+    
+    public List<Inventory> findAllAvailable(String startDate, String endDate) {
+        DateValidationUtil.validateDate(startDate, "startDate");
+        DateValidationUtil.validateDate(endDate, "endDate");
+        
+        return repository.findAmountAvailable(Date.valueOf(startDate), Date.valueOf(endDate));
+    }
+    
+    public Inventory findAvailable(int vehicleId, String startDate, String endDate) {
+        DateValidationUtil.validateDate(startDate, "startDate");
+        DateValidationUtil.validateDate(endDate, "endDate");
+        
+        return repository.findAmountAvailable(vehicleId, Date.valueOf(startDate), Date.valueOf(endDate));
     }
 }

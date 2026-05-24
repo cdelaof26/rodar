@@ -72,7 +72,7 @@ services:
       <<: *micro-common-build
       context: vimicro
       args:
-        ARTIFACT: vimicro-v0.0.3.jar
+        ARTIFACT: vimicro-0.0.3.jar
     ports:
       - 8081:8080
     depends_on:
@@ -194,11 +194,63 @@ services:
     networks:
       - pmicro-net
 
+
+  remicro:
+    <<: *micro-common
+    environment:
+      <<: *micro-common-env
+      SPRING_DATASOURCE_URL: jdbc:mariadb://remicro-db:3306/redb?useSSL=false&serverTimezone=UTC
+      PMMICRO_BASE_URL: http://pmmicro:8080/api/v1
+      VIMICRO_BASE_URL: http://vimicro:8080/api/v1
+      TMICRO_BASE_URL: http://tmicro:8080/api/v1
+      VSMICRO_BASE_URL: http://vsmicro:8080/api/v1
+      PMICRO_BASE_URL: http://pmicro:8080/api/v1
+      
+    container_name: remicro
+    build: 
+      <<: *micro-common-build
+      context: remicro
+      args:
+        ARTIFACT: remicro-0.0.1.jar
+    ports:
+      - 8085:8080
+    depends_on:
+      remicro-db:
+        condition: service_healthy
+      pmmicro:
+        condition: service_started
+      vimicro:
+        condition: service_started
+      tmicro:
+        condition: service_started
+      vsmicro:
+        condition: service_started
+      pmicro:
+        condition: service_started
+
+    networks:
+      - remicro-net
+      - internal
+
+  remicro-db:
+    <<: *db-common
+    environment:
+      <<: *db-common-env
+      MARIADB_DATABASE: "redb"
+
+    container_name: remicro-db
+    volumes:
+      - remicro-db-data:/var/lib/mysql
+      - ./remicro/db:/docker-entrypoint-initdb.d
+    networks:
+      - remicro-net
+
 volumes:
   pmmicro-db-data: {}
   vimicro-db-data: {}
   vsmicro-db-data: {}
   pmicro-db-data: {}
+  remicro-db-data: {}
 
 networks:
   internal:
@@ -217,4 +269,7 @@ networks:
     driver: bridge
 
   pmicro-net:
+    driver: bridge
+
+  remicro-net:
     driver: bridge

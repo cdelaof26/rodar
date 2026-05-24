@@ -49,13 +49,26 @@ public class InventoryController {
         l.debug("startDate = " + startDate);
         l.debug("endDate = " + endDate);
         
-        return ResponseEntity.ok(vehicleService.findAllAvailable(startDate, endDate));
+        return ResponseEntity.ok(inventoryService.findAllAvailable(startDate, endDate));
     }
     
     @GetMapping("/{vehicleId}")
-    public ResponseEntity<Inventory> getVehicleAvailableAmount(@PathVariable int vehicleId) {
-        l.debug(String.format("Listing available vehicles with id %d...", vehicleId));
-        return ResponseEntity.ok(inventoryService.getInventoryById(vehicleId));
+    public ResponseEntity<Inventory> getVehicleAvailableAmount(
+        @PathVariable int vehicleId, @RequestParam String startDate, 
+        @RequestParam String endDate
+    ) {
+        l.debug(String.format("Listing available vehicles with id %d in dates,", vehicleId));
+        l.debug("startDate = " + startDate);
+        l.debug("endDate = " + endDate);
+        
+        // I'm thinking of getting rid of inventory. It's unreliable because
+        // the amount of available vehicles depends on the range of dates.
+        // 
+        // It's useful if you need to know how many vehicles are available today, though.
+        //
+//        return ResponseEntity.ok(inventoryService.getInventoryById(vehicleId));
+
+        return ResponseEntity.ok(inventoryService.findAvailable(vehicleId, startDate, endDate));
     }
     
     @PostMapping

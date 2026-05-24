@@ -47,13 +47,13 @@ public class VehicleService {
         Environment environment, RestTemplate restTemplate, 
         VehicleRepository vehicleRepository, TypeRepository typeRepository
     ) {
-        this.restTemplate = restTemplate;
-        this.vehicleRepository = vehicleRepository;
-        this.typeRepository = typeRepository;
-        
         this.PMMICRO_URL = environment.getProperty("pmmicro.base-url");
         this.VIMICRO_URL = environment.getProperty("vimicro.base-url");
         this.TMICRO_URL = environment.getProperty("tmicro.base-url");
+        
+        this.restTemplate = restTemplate;
+        this.vehicleRepository = vehicleRepository;
+        this.typeRepository = typeRepository;
     }
     
     private void validateDate(String d, String name) {

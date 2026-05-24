@@ -116,6 +116,13 @@ reserv -> pmmicro : GET /providers/{providerId}
 pmmicro -> pmserv : getProvider(providerId: int): ResponseEntity<Provider>
 pmserv -> pmrepo : findProviderById(id: int): Optional<Provider>
 
+note left of reserv
+  //Para el vehículo se busca su precio por día actualizado//
+end note
+reserv -> vsmicro : GET /vehicle/{vehicleId}
+vsmicro -> vsserv : getVehicle(vehicleId: int): ResponseEntity<Vehicle>
+vsserv -> vsrepo : findVehicleById(id: int): Optional<Vehicle>
+
 note right of reserv
   //Para el vehículo se convierte la divisa C1 (proveedor) a C2 (usuario)//
 end note

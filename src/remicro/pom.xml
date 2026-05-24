@@ -9,9 +9,9 @@
             <relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>es.upm.cdelaof26</groupId>
-	<artifactId>vimicro</artifactId>
-	<version>0.0.3</version>
-	<name>vimicro</name>
+	<artifactId>remicro</artifactId>
+	<version>0.0.1</version>
+	<name>remicro</name>
 	<description/>
 	<url/>
 	<licenses>
@@ -58,6 +58,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+                <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-restclient</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -130,4 +134,5 @@
                         </plugin>
 		</plugins>
 	</build>
+
 </project>

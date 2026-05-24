@@ -102,7 +102,7 @@ entradas. Por simplificar la implementación, se utiliza directamente.
         Obtiene todos los vehículos disponibles dado un rango de fechas
         - Casos de uso: 1
 
-    GET  /vehicles/{vehicleId}
+    GET  /vehicles/{vehicleId}?startDate=&endDate=
         Obtiene los datos de disponibilidad un vehículo
         - Casos de uso: 2
 
@@ -134,25 +134,28 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 
 
 <details>
-    <summary><b>Reservation microservice (remicro)</b></summary>
+    <summary><b>Reservation microservice (remicro) since v0.1.1</b></summary>
 
 #### Dependencias
 
 - [x] pmmicro
 - [x] vimicro
 - [x] tmicro
-- [ ] pmicro (UC2)
+- [x] pmicro (UC2)
 - [x] vsmicro
 
 #### Endpoints
 
 <pre>
+    GET  /reservations  # Testing
+        Obtiene todas las reservaciones
+
     POST /reservations
         Crea una nueva reservación
         - Casos de uso: 2 [Depende de pmicro]
 
     GET  /reservations/{reservationId}
-        - Casos de uso: 3
+        - Casos de uso: 2 y 3
 </pre>
 </details>
 
@@ -163,7 +166,7 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 #### Dependencias
 
 - [x] vimicro
-- [ ] remicro (UC3)
+- [x] remicro (UC3)
 - [ ] ~~nmicro~~
 
 #### Endpoints
@@ -188,6 +191,9 @@ entradas. Por simplificar la implementación, se utiliza directamente.
 
 
 ## Historial de cambios
+
+### v0.1.1 Microservicio ```remicro```
+- **TODO**: Clean up
 
 ### v0.1.0 Microservicio ```pmicro```
 

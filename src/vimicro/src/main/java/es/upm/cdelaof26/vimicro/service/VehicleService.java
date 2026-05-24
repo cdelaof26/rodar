@@ -2,7 +2,6 @@ package es.upm.cdelaof26.vimicro.service;
 
 import es.upm.cdelaof26.vimicro.dto.VehicleCreationDto;
 import es.upm.cdelaof26.vimicro.dto.VehicleUpdateDto;
-import es.upm.cdelaof26.vimicro.exception.InvalidDateException;
 import es.upm.cdelaof26.vimicro.exception.MissingFieldException;
 import es.upm.cdelaof26.vimicro.exception.NoAvailableVehiclesException;
 import es.upm.cdelaof26.vimicro.exception.VehicleAlreadyExistException;
@@ -14,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import es.upm.cdelaof26.vimicro.repository.VehicleRepository;
 import java.sql.Date;
-import java.util.List;
 
 /**
  * Vehicle service
@@ -50,20 +48,6 @@ public class VehicleService {
         return _v;
     }
     
-    private void validateDate(String d, String name) {
-        if (!d.matches("^\\d{4}-\\d{1,2}-\\d{1,2}$")) {
-            l.error(String.format("Invalid value '%s' for %s", d, name));
-            throw new InvalidDateException(d);
-        }
-    }
-    
-    public List<Inventory> findAllAvailable(String startDate, String endDate) {
-        validateDate(startDate, "startDate");
-        validateDate(endDate, "endDate");
-        
-        return vehicleRepository.findAmountAvailable(Date.valueOf(startDate), Date.valueOf(endDate));
-    }
-    
     public String updateVehicle(VehicleUpdateDto v, Inventory i) {
         // TODO: Review logic for returns. Even if not needed?
 //        if (!v.isInUse()) {
@@ -76,8 +60,8 @@ public class VehicleService {
             throw new NoAvailableVehiclesException(i.getId(), v.getStartDate(), v.getEndDate());
         }
         
-        validateDate(v.getStartDate(), "startDate");
-        validateDate(v.getEndDate(), "endDate");
+        DateValidationUtil.validateDate(v.getStartDate(), "startDate");
+        DateValidationUtil.validateDate(v.getEndDate(), "endDate");
         
         Date startDate = Date.valueOf(v.getStartDate());
         Date endDate = Date.valueOf(v.getEndDate());
