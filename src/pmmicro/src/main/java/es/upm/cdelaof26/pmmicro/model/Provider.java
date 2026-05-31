@@ -25,6 +25,7 @@ public class Provider extends RepresentationModel<Provider> {
     @Schema(description = "Identificador autoincremental", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer id;
     
+    @NotEmpty(message = "El nombre completo es obligatorio")
     @Schema(description = "Nombre completo", pattern = ".{1,128}", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
     

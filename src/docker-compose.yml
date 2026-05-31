@@ -19,6 +19,7 @@ x-micro-common: &micro-common
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       LOGGING_LEVEL_ES_UPM_CDELAOF26: "${LOGGING_LVL:-INFO}"
+      CONSOLE_LOG_PATTERN: "%5p %logger{36} : %m%n"
 
     build: &micro-common-build
       dockerfile: ../backend.Dockerfile
@@ -59,6 +60,8 @@ services:
       - ./pmmicro/db:/docker-entrypoint-initdb.d
     networks:
       - pmmicro-net
+    ports:
+      - 3306:3306
 
 
   vimicro:
